@@ -51,26 +51,28 @@ pytest_podman:
     - sudo -u podman molecule --version
     - sudo -u podman pytest --version
     - sudo -u podman podman info
-    #- sudo -u podman mkdir -p molecule/podman/roles && sudo -u podman ln -s ../../.. molecule/podman/roles/onionprobe
+    - sudo -u podman mkdir -p molecule/podman/roles && sudo -u podman ln -s ../../.. molecule/podman/roles/onionprobe
 
   script:
-    - sudo -u podman pytest -k podman -r A
+    #- sudo -u podman pytest -k podman -r A
+    - sudo -u podman molecule test -s podman
 
 # Run Ansible tests directly in the CI containers
-pytest_local:
-  stage: test
-
-  image: debian:bookworm
-
-  before_script:
-    - apt-get update
-    - apt install -y python3-pip ansible
-    - python3 -m pip install molecule pytest-ansible --break-system-packages
-    - python3 --version
-    - ansible --version
-    - molecule --version
-    - pytest --version
-    #- mkdir -p molecule/podman/roles && ln -s ../../.. molecule/podman/roles/onionprobe
-
-  script:
-    - pytest -k local -r A
+#pytest_local:
+#  stage: test
+#
+#  image: debian:bookworm
+#
+#  before_script:
+#    - apt-get update
+#    - apt install -y python3-pip ansible
+#    - python3 -m pip install molecule pytest-ansible --break-system-packages
+#    - python3 --version
+#    - ansible --version
+#    - molecule --version
+#    - pytest --version
+#    - mkdir -p molecule/podman/roles && ln -s ../../.. molecule/podman/roles/onionprobe
+#
+#  script:
+#    #- pytest -k local -r A
+#    - molecule test -s local
