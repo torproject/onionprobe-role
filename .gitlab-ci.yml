@@ -51,6 +51,7 @@ pytest_podman:
     - sudo -u podman molecule --version
     - sudo -u podman pytest --version
     - sudo -u podman podman info
+    #- sudo -u podman mkdir -p molecule/podman/roles && sudo -u podman ln -s ../../.. molecule/podman/roles/onionprobe
 
   script:
     - sudo -u podman pytest -k podman -r A
@@ -69,6 +70,7 @@ pytest_local:
     - ansible --version
     - molecule --version
     - pytest --version
+    #- mkdir -p molecule/podman/roles && ln -s ../../.. molecule/podman/roles/onionprobe
 
   script:
     - pytest -k local -r A
