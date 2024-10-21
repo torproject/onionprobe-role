@@ -1,0 +1,7 @@
+#
+# Onionprobe role
+#
+
+- name: Onionprobe monitor node
+  include_tasks: monitor.yml
+  when: onionprobe_mode == 'monitor'

@@ -1,0 +1,177 @@
+---
+#
+# Onionprobe Monitor tasks
+#
+
+- name: Create monitor group, user and repository
+  block:
+  # Installing acl package is needed so become_user works correctly.
+  #
+  # Otherwise the following exception happens:
+  #
+  #   fatal: [onionprobe-dev]: FAILED! => {"msg": "Failed to set permissions on
+  #   the temporary files Ansible needs to create when becoming an unprivileged
+  #   user (rc: 1, err: chmod: invalid mode:
+  #   'A+user:onionprobe-monitor:rx:allow'\nTry 'chmod --help' for more
+  #   information.\n}). For information on working around this, see
+  #   https://docs.ansible.com/ansible-core/2.14/user_guide/become.html#risks-of-becoming-an-unprivileged-user"}
+  #
+  # References:
+  #
+  # * https://docs.ansible.com/ansible-core/2.14/playbook_guide/playbooks_privilege_escalation.html#risks-and-limitations-of-become
+  # * https://stackoverflow.com/questions/46352173/ansible-failed-to-set-permissions-on-the-temporary#56379678
+  # * https://github.com/ansible/ansible/issues/74830
+  - name: Install acl
+    ansible.builtin.package:
+      name: acl
+
+  - name: Create the monitor group
+    ansible.builtin.group:
+      name: "{{ onionprobe_monitor_user }}"
+      gid: "{{ onionprobe_monitor_gid }}"
+
+  - name: Create the monitor user
+    ansible.builtin.user:
+      name: "{{ onionprobe_monitor_user }}"
+      append: yes
+      uid: "{{ onionprobe_monitor_uid }}"
+      group: "{{ onionprobe_monitor_user }}"
+      groups: "{{ [ 'docker' ] if onionprobe_container_runtime == 'docker' else [] }}"
+      create_home: no
+      home: "{{ onionprobe_monitor_path }}"
+      password_lock: true
+
+  # Note that Git is able to clone to an empty folder, so there's no harm
+  # in creating this folder in the first run when the repository is still not
+  # cloned.
+  - name: Create the monitor folder
+    ansible.builtin.file:
+      path: "{{ onionprobe_monitor_path }}"
+      owner: "{{ onionprobe_monitor_user }}"
+      group: "{{ onionprobe_monitor_user }}"
+      state: directory
+      # We _could_ set the mode to 0750, but then we would have trouble sharing
+      # this folder with containers
+      mode: '0755'
+      recurse: false
+
+  # Useful in case something is already there and with other ownership, such as
+  # alertmanager's configuration
+  - name: Set the onionprobe repository permission
+    ansible.builtin.file:
+      path: "{{ onionprobe_monitor_path }}"
+      state: directory
+      owner: "{{ onionprobe_monitor_user }}"
+      group: "{{ onionprobe_monitor_user }}"
+      recurse: no
+
+  - name: Clone the onionprobe repository
+    ansible.builtin.git:
+      repo: "{{ onionprobe_repo }}"
+      dest: "{{ onionprobe_monitor_path }}"
+    become: yes
+    become_user: "{{ onionprobe_monitor_user }}"
+
+- name: Configure monitoring
+  block:
+    # Used only for testing
+    #- name: Copy custom Onionprobe configuration
+    #  ansible.posix.synchronize:
+    #    src: ../../../
+    #    dest: "{{ onionprobe_monitor_path }}/contrib/"
+    #    delete: yes
+    #    verify_host: yes
+
+    # Used only for testing
+    #- name: Sets the custom Onionprobe config permissions
+    #  ansible.builtin.file:
+    #    path: "{{ onionprobe_monitor_path }}/contrib/"
+    #    state: directory
+    #    owner: "{{ onionprobe_monitor_user }}"
+    #    group: "{{ onionprobe_monitor_user }}"
+    #    recurse: yes
+
+  - name: Create the alertmanager contrib config folder
+    ansible.builtin.file:
+      path: "{{ onionprobe_monitor_path }}/contrib/configs/alertmanager"
+      owner: "{{ onionprobe_monitor_user }}"
+      group: "{{ onionprobe_monitor_user }}"
+      mode: '0755'
+      state: directory
+      recurse: false
+
+  - name: Setup the altertmanager contrib config
+    ansible.builtin.template:
+      src: "{{ onionprobe_monitor_alertmanager_template }}"
+      dest: "{{ onionprobe_monitor_path }}/contrib/configs/alertmanager/alertmanager.yml"
+      # Ownership here depends on the UID and GID used by the Alertmanager container service
+      owner: "nobody"
+      group: "nogroup"
+      mode: '0640'
+      force: yes
+
+  - name: Create the config generation script
+    block:
+    - name: Create the custom scripts folder
+      ansible.builtin.file:
+        path: "{{ onionprobe_monitor_path }}/contrib/scripts"
+        owner: "{{ onionprobe_monitor_user }}"
+        group: "{{ onionprobe_monitor_user }}"
+        mode: '0755'
+        recurse: true
+
+    - name: Copy custom config generation script
+      ansible.builtin.copy:
+        src: "{{ onionprobe_config_generation_script }}"
+        dest: "{{ onionprobe_monitor_path }}/contrib/scripts/"
+        owner: "{{ onionprobe_monitor_user }}"
+        group: "{{ onionprobe_monitor_user }}"
+        mode: '0755'
+    when: onionprobe_config_generation_script != ''
+
+  - name: Setup the environment file
+    ansible.builtin.template:
+      src: docker-compose/env.j2
+      dest: "{{ onionprobe_monitor_path }}/.env"
+      owner: "{{ onionprobe_monitor_user }}"
+      group: "{{ onionprobe_monitor_user }}"
+      mode: '0640'
+      force: yes
+
+- name: Configure the monitoring service
+  block:
+  - name: Create the podman config folder for the monitor user
+    ansible.builtin.file:
+      path: "{{ onionprobe_monitor_path }}/.config/containers/containers.conf.d"
+      owner: "{{ onionprobe_monitor_user }}"
+      group: "{{ onionprobe_monitor_user }}"
+      state: directory
+      mode: '0755'
+    when: onionprobe_container_runtime == 'podman'
+
+  - name: Configure podman's containers.conf for the monitor user
+    ansible.builtin.copy:
+      remote_src: true
+      src: "{{ onionprobe_monitor_path }}/configs/podman/containers.conf"
+      dest: "{{ onionprobe_monitor_path }}/.config/containers/containers.conf.d"
+      owner: root
+      group: root
+      mode: '0644'
+    when: onionprobe_container_runtime == 'podman'
+
+  - name: Configure the systemd service file for the monitoring node
+    ansible.builtin.copy:
+      remote_src: true
+      src: "{{ onionprobe_monitor_path }}/configs/systemd/{{ onionprobe_monitor_service }}.service"
+      dest: /etc/systemd/system
+      owner: root
+      group: root
+      mode: '0644'
+
+  - name: Enable the systemd service for the monitoring node
+    ansible.builtin.systemd:
+      name: "{{ onionprobe_monitor_service }}"
+      enabled: yes
+      daemon_reload: yes
+      state: started
+    when: onionprobe_monitor_enable_service is true

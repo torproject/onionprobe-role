@@ -1,0 +1,52 @@
+---
+#
+# Basic
+#
+
+# Control the managed node's mode of operation
+onionprobe_project_name: onionprobe-monitor
+onionprobe_mode: monitor
+onionprobe_config_generation_script: ''
+onionprobe_config: ''
+onionprobe_configurator_entrypoint: ''
+onionprobe_configurator_params: ''
+onionprobe_container_runtime: 'docker'
+
+#
+# Monitor mode
+#
+
+# Whether to automatically enable the service
+onionprobe_monitor_enable_service: true
+
+# User, group and folder
+onionprobe_monitor_user: onionprobe-monitor
+onionprobe_monitor_service: onionprobe-monitor
+onionprobe_monitor_uid: 2000
+onionprobe_monitor_gid: 2000
+onionprobe_monitor_path: /var/lib/onionprobe-monitor
+
+# Repository
+onionprobe_repo: https://gitlab.torproject.org/tpo/onion-services/onionprobe.git
+
+# Prometheus
+onionprobe_monitor_prometheus_web_external_url: 'http://localhost:9090'
+
+# Grafana
+onionprobe_monitor_grafana_database_password: unsafe-password-please-change
+onionprobe_monitor_grafana_smtp_enabled: false
+onionprobe_monitor_grafana_smtp_host: localhost:25
+onionprobe_monitor_grafana_smtp_user: ''
+onionprobe_monitor_grafana_stmp_password: ''
+onionprobe_monitor_grafana_smtp_starttls_policy: ''
+onionprobe_monitor_grafana_server_domain: ''
+onionprobe_monitor_grafana_server_root_url: ''
+onionprobe_monitor_grafana_plugins_enable_alpha: false
+
+# Alertmanager
+onionprobe_monitor_alertmanager_template: alertmanager/alertmanager.yml.j2
+onionprobe_monitor_smtp_smarthost: mail.example.org:587
+onionprobe_monitor_smtp_email: changeme@example.org
+onionprobe_monitor_smtp_username: changeme
+onionprobe_monitor_smtp_auth_password: changeme
+onionprobe_monitor_altermanager_default_recipient_email: changeme@example.org

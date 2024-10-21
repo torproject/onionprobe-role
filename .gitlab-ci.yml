@@ -1,0 +1,74 @@
+---
+# Docker-in-Docker CI workflow.
+#
+# GitLab CI config adapted from
+# https://ansible.readthedocs.io/projects/molecule/ci/#gitlab-ci
+#
+# Disabled, since Tor's GitLab don't support DinD, as of 2024-10-09:
+#
+# * https://gitlab.torproject.org/tpo/tpa/renovate-cron/-/issues/2
+# * https://gitlab.torproject.org/tpo/core/onionmasq/-/issues/112
+#
+#pytest_docker:
+#  stage: test
+#
+#  image: docker:stable-dind
+#
+#  services:
+#    - docker:dind
+#
+#  before_script:
+#    - apk add --no-cache
+#      python3 python3-dev py3-pip gcc git curl build-base
+#      autoconf automake py3-cryptography linux-headers
+#      musl-dev libffi-dev openssl-dev openssh
+#    - python3 -m pip install ansible molecule-plugins[docker] pytest-ansible
+#    - python3 --version
+#    - ansible --version
+#    - molecule --version
+#    - pytest --version
+#    - docker info
+#
+#  script:
+#    - pytest -k docker -r A
+
+# Podman CI workflow
+# This may also need privileged containers.
+pytest_podman:
+  stage: test
+
+  image:
+    name: containers.torproject.org/tpo/tpa/base-images/podman:bookworm
+    docker:
+      user: root
+
+  before_script:
+    - apt-get update
+    - apt install -y sudo python3-pip ansible
+    - python3 -m pip install molecule-plugins[podman] pytest-ansible --break-system-packages
+    - sudo -u podman python3 --version
+    - sudo -u podman ansible --version
+    - sudo -u podman molecule --version
+    - sudo -u podman pytest --version
+    - sudo -u podman podman info
+
+  script:
+    - sudo -u podman pytest -k podman -r A
+
+# Run Ansible tests directly in the CI containers
+pytest_local:
+  stage: test
+
+  image: debian:bookworm
+
+  before_script:
+    - apt-get update
+    - apt install -y python3-pip ansible
+    - python3 -m pip install molecule pytest-ansible --break-system-packages
+    - python3 --version
+    - ansible --version
+    - molecule --version
+    - pytest --version
+
+  script:
+    - pytest -k local -r A

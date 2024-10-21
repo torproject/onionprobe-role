@@ -1,0 +1,72 @@
+---
+# Sample Alertmanager configuration to be used with Docker Compose
+#
+# Based on https://github.com/prometheus/alertmanager/blob/main/doc/examples/simple.yml
+#
+# Copyright (C) 2024 The Tor Project, Inc.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published
+# by the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# Global options
+global:
+  resolve_timeout: 5m
+
+  # The smarthost and SMTP sender used for mail notifications.
+  smtp_smarthost     : {{ onionprobe_monitor_smtp_smarthost }}
+  smtp_from          : {{ onionprobe_monitor_smtp_email }}
+  smtp_auth_username : {{ onionprobe_monitor_smtp_username }}
+  smtp_auth_password : {{ onionprobe_monitor_smtp_auth_password }}
+
+# The root route on which each incoming alert enters.
+route:
+  # The labels by which incoming alerts are grouped together. For example,
+  # multiple alerts coming in for cluster=A and alertname=LatencyHigh would
+  # be batched into a single group.
+  #
+  # To aggregate by all possible labels use '...' as the sole label name.
+  # This effectively disables aggregation entirely, passing through all
+  # alerts as-is. This is unlikely to be what you want, unless you have
+  # a very low alert volume or your upstream notification system performs
+  # its own grouping. Example: group_by: [...]
+  group_by: ['alertname', 'cluster', 'service']
+
+  # When a new group of alerts is created by an incoming alert, wait at
+  # least 'group_wait' to send the initial notification.
+  # This way ensures that you get multiple alerts for the same group that start
+  # firing shortly after another are batched together on the first
+  # notification.
+  group_wait: 5m
+
+  # When the first notification was sent, wait 'group_interval' to send a batch
+  # of new alerts that started firing for that group.
+  group_interval: 1h
+
+  # If an alert has successfully been sent, wait 'repeat_interval' to
+  # resend them.
+  repeat_interval: 3h
+
+  # A default receiver
+  receiver: onionprobe-alerts
+
+  # All the above attributes are inherited by all child routes and can
+  # overwritten on each.
+
+  # The child route trees.
+  routes: []
+
+# Receivers
+receivers:
+  - name: 'onionprobe-alerts'
+    email_configs:
+      - to: {{ onionprobe_monitor_altermanager_default_recipient_email }}

@@ -1,0 +1,24 @@
+---
+dependency:
+  name: galaxy
+  options:
+    requirements-file: requirements-podman.yml
+
+platforms:
+  - name: bookworm
+    # Use a container with Python pre-installed
+    image: docker.io/python:bookworm
+    pre_build_image: true
+    privileged: true
+
+    # Container entrypoint
+    # A command that keeps the container running
+    command: ${MOLECULE_DOCKER_COMMAND:-"sleep infinity"}
+
+driver:
+  name: podman
+  options:
+    managed: false
+    login_cmd_template: "podman exec -ti {instance} bash"
+    ansible_connection_options:
+      ansible_connection: podman
