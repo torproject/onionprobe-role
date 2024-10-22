@@ -12,4 +12,4 @@
       ansible.builtin.assert:
         quiet: true
         that:
-          - "onionprobe_mode != 'monitor' or (onionprobe_mode == 'monitor' and onionprobe_installation == 'repository')"
+          - "onionprobe_operation != 'monitor' or (onionprobe_operation == 'monitor' and onionprobe_installation == 'repository')"
