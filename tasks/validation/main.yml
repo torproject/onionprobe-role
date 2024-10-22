@@ -1,0 +1,15 @@
+---
+#
+# Config validation
+#
+# Copyright (C) 2024 The Tor Project, Inc.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+- name: Onionprobe config validation
+  block:
+    - name: Checks that the monitor mode can only be used with the repository installation method
+      ansible.builtin.assert:
+        quiet: true
+        that:
+          - "onionprobe_mode != 'monitor' or (onionprobe_mode == 'monitor' and onionprobe_installation == 'repository')"

@@ -1,0 +1,67 @@
+---
+#
+# Onionprobe installation using a repository working copy
+#
+# Copyright (C) 2024 The Tor Project, Inc.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+- name: Install Onionprobe dependencies:
+  block:
+    - name: Install Onionprobe dependencies on Debian-like systems
+      ansible.builtin.apt:
+        name:
+          - git
+          - ca-certificates
+          - python3-prometheus-client
+          - python3-stem
+          - python3-cryptography
+          - python3-bs4
+          - python3-yaml
+          - python3-pytest
+          - python3-requests
+          - python3-socks
+      when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+    - name: Emit a warning if this Ansible role currently cannot handle a given distro
+      debug:
+        msg:
+          - "The Onionprobe Ansible role currently does not handle dependencies on {{ ansible_distribution }}."
+          - "Please manage them manually, or create a merge request."
+      when: ansible_distribution =! 'Debian' and ansible_distribution =! 'Ubuntu'
+
+- name: Manage group and user
+  include_tasks: ../environment/user.yml
+
+- name: Manage repository
+  block:
+  # Note that Git is able to clone to an empty folder, so there's no harm
+  # in creating this folder in the first run when the repository is still not
+  # cloned.
+  - name: Manage the folder
+    ansible.builtin.file:
+      path: "{{ onionprobe_path }}"
+      owner: "{{ onionprobe_user }}"
+      group: "{{ onionprobe_user }}"
+      state: directory
+      # We _could_ set the mode to 0750, but then we would have trouble sharing
+      # this folder with containers
+      mode: '0755'
+      recurse: false
+
+  # Useful in case something is already there and with other ownership, such as
+  # alertmanager's configuration
+  - name: Manage the onionprobe repository permission
+    ansible.builtin.file:
+      path: "{{ onionprobe_path }}"
+      state: directory
+      owner: "{{ onionprobe_user }}"
+      group: "{{ onionprobe_user }}"
+      recurse: no
+
+  - name: Manage the onionprobe Git repository
+    ansible.builtin.git:
+      repo: "{{ onionprobe_repo }}"
+      dest: "{{ onionprobe_path }}"
+    become: yes
+    become_user: "{{ onionprobe_user }}"

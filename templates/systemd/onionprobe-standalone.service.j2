@@ -1,0 +1,37 @@
+#
+# Systemd service file to run the Onionprobe monitoring node.
+#
+# Copyright (C) 2024 The Tor Project, Inc.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+[Unit]
+Description=Onionprobe monitoring node service
+After=network.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+
+# User, groups and dirs
+User={{ onionprobe_user }}
+Group={{ onionprobe_group }}
+RuntimeDirectory={{ onionprobe_project_name }}
+WorkingDirectory={{ onionprobe_path }}}
+
+#ExecStartPre=-/usr/bin/docker-compose pull --quiet
+#ExecStart=/usr/bin/docker-compose up -d --remove-orphans
+ExecStart={{ onionprobe_path }}/onionprobe-monitor up
+
+#ExecStop=/usr/bin/docker-compose down
+ExecStart={{ onionprobe_path }}/onionprobe-monitor down
+
+# Reload
+#ExecReload=/usr/bin/docker-compose restart
+#ExecReload=/usr/bin/docker-compose pull --quiet
+#ExecReload=/usr/bin/docker-compose build
+#ExecReload=/usr/bin/docker-compose up -d --remove-orphans
+ExecStart={{ onionprobe_path }}/onionprobe-monitor reload
+
+[Install]
+WantedBy=multi-user.target

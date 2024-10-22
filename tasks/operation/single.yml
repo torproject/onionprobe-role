@@ -1,0 +1,24 @@
+---
+#
+# Onionprobe single operation mode
+#
+# Copyright (C) 2024 The Tor Project, Inc.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+- name: Onionprobe service configuration when installed from pip
+  block:
+  - name: Manage group and user
+    include_tasks: ../resources/environment/user.yml
+
+  - name: Manage the service environment file
+    include_tasks: ../resources/environment/file.yml
+    vars:
+      destination: "{{ onionprobe_path }}/onionprobe.conf"
+      owner: "{{ onionprobe_user }}"
+      group: "{{ onionprobe_group }}"
+
+  when: onionprobe_installation == 'pip'
+
+- name: Manage Onionprobe's Systemd service
+  include_tasks: ../service/systemd.yml

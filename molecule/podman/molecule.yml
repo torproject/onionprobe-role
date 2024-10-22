@@ -1,4 +1,10 @@
 ---
+# 
+# Onionprobe Ansible molecule test
+#
+# Copyright (C) 2024 The Tor Project, Inc.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
 dependency:
   name: galaxy
   options:

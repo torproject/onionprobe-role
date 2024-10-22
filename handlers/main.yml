@@ -1,0 +1,14 @@
+---
+#
+# Onionprobe handlers
+#
+# Copyright (C) 2024 The Tor Project, Inc.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+- name: Restart the Onionprobe service
+  ansible.builtin.systemd:
+    name: "{{ onionprobe_service }}"
+    enabled: yes
+    daemon_reload: yes
+    state: restarted

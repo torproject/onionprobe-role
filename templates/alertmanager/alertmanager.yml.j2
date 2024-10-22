@@ -4,29 +4,18 @@
 # Based on https://github.com/prometheus/alertmanager/blob/main/doc/examples/simple.yml
 #
 # Copyright (C) 2024 The Tor Project, Inc.
+# SPDX-License-Identifier: GPL-3.0-or-later
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published
-# by the Free Software Foundation, either version 3 of the License,
-# or any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Global options
 global:
   resolve_timeout: 5m
 
   # The smarthost and SMTP sender used for mail notifications.
-  smtp_smarthost     : {{ onionprobe_monitor_smtp_smarthost }}
-  smtp_from          : {{ onionprobe_monitor_smtp_email }}
-  smtp_auth_username : {{ onionprobe_monitor_smtp_username }}
-  smtp_auth_password : {{ onionprobe_monitor_smtp_auth_password }}
+  smtp_smarthost     : {{ onionprobe_smtp_smarthost }}
+  smtp_from          : {{ onionprobe_smtp_email }}
+  smtp_auth_username : {{ onionprobe_smtp_username }}
+  smtp_auth_password : {{ onionprobe_smtp_auth_password }}
 
 # The root route on which each incoming alert enters.
 route:
@@ -69,4 +58,4 @@ route:
 receivers:
   - name: 'onionprobe-alerts'
     email_configs:
-      - to: {{ onionprobe_monitor_altermanager_default_recipient_email }}
+      - to: {{ onionprobe_altermanager_default_recipient_email }}

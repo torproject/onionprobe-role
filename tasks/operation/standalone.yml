@@ -1,0 +1,123 @@
+---
+#
+# Onionprobe standalone monitoring mode
+#
+# Copyright (C) 2024 The Tor Project, Inc.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+- name: Configure monitoring
+  block:
+    # Used only for testing
+    #- name: Copy custom Onionprobe configuration
+    #  ansible.posix.synchronize:
+    #    src: ../../../
+    #    dest: "{{ onionprobe_path }}/contrib/"
+    #    delete: yes
+    #    verify_host: yes
+
+    # Used only for testing
+    #- name: Sets the custom Onionprobe config permissions
+    #  ansible.builtin.file:
+    #    path: "{{ onionprobe_path }}/contrib/"
+    #    state: directory
+    #    owner: "{{ onionprobe_user }}"
+    #    group: "{{ onionprobe_user }}"
+    #    recurse: yes
+
+  - name: Create the alertmanager contrib config folder
+    ansible.builtin.file:
+      path: "{{ onionprobe_path }}/contrib/configs/alertmanager"
+      owner: "{{ onionprobe_user }}"
+      group: "{{ onionprobe_user }}"
+      mode: '0755'
+      state: directory
+      recurse: false
+
+  - name: Setup the altertmanager contrib config
+    ansible.builtin.template:
+      src: "{{ onionprobe_alertmanager_template }}"
+      dest: "{{ onionprobe_path }}/contrib/configs/alertmanager/alertmanager.yml"
+      # Ownership here depends on the UID and GID used by the Alertmanager container service
+      owner: "nobody"
+      group: "nogroup"
+      mode: '0640'
+      force: yes
+
+  - name: Create the config generation script
+    block:
+    - name: Create the custom scripts folder
+      ansible.builtin.file:
+        path: "{{ onionprobe_path }}/contrib/scripts"
+        owner: "{{ onionprobe_user }}"
+        group: "{{ onionprobe_user }}"
+        mode: '0755'
+        recurse: true
+
+    - name: Copy custom config generation script
+      ansible.builtin.copy:
+        src: "{{ onionprobe_config_generation_script }}"
+        dest: "{{ onionprobe_path }}/contrib/scripts/"
+        owner: "{{ onionprobe_user }}"
+        group: "{{ onionprobe_user }}"
+        mode: '0755'
+    when: onionprobe_config_generation_script != ''
+
+  - name: Setup the environment file
+    ansible.builtin.template:
+      src: docker-compose/env.j2
+      dest: "{{ onionprobe_path }}/.env"
+      owner: "{{ onionprobe_user }}"
+      group: "{{ onionprobe_user }}"
+      mode: '0640'
+      force: yes
+
+- name: Configure the monitoring service
+  block:
+  - name: Create the podman config folder for the monitor user
+    ansible.builtin.file:
+      path: "{{ onionprobe_path }}/.config/containers/containers.conf.d"
+      owner: "{{ onionprobe_user }}"
+      group: "{{ onionprobe_user }}"
+      state: directory
+      mode: '0755'
+    when: onionprobe_container_runtime == 'podman'
+
+  - name: Configure podman's containers.conf for the monitor user
+    ansible.builtin.copy:
+      remote_src: true
+      src: "{{ onionprobe_path }}/configs/podman/containers.conf"
+      dest: "{{ onionprobe_path }}/.config/containers/containers.conf.d"
+      owner: root
+      group: root
+      mode: '0644'
+    when: onionprobe_container_runtime == 'podman'
+
+  #- name: Configure the systemd service file for the monitoring node
+  #  ansible.builtin.copy:
+  #    remote_src: true
+  #    src: "{{ onionprobe_path }}/configs/systemd/onionprobe-monitor.service"
+  #    dest: "/etc/systemd/system/{{ onionprobe_service }}.service"
+  #    owner: root
+  #    group: root
+  #    mode: '0644'
+
+  - name: Setup the service environment file
+    block:
+    - name: Manage the service environment file
+      include_tasks: ../resources/environment/file.yml
+      vars:
+        destination: "/etc/default/onionprobe"
+        owner: root
+        group: root
+      when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+    - name: Emit a warning if this Ansible role currently cannot handle the env file
+      debug:
+        msg:
+          - "The Onionprobe Ansible role currently does not handle the environmente file on {{ ansible_distribution }}."
+          - "Please manage it manually, or create a merge request."
+      when: ansible_distribution =! 'Debian' and ansible_distribution =! 'Ubuntu'
+
+  - name: Manage Onionprobe's Systemd service
+    include_tasks: ../resources/service/systemd.yml

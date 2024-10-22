@@ -1,0 +1,54 @@
+#
+# Systemd service file to run Onionprobe.
+#
+# Copyright (C) 2024 The Tor Project, Inc.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+[Unit]
+Description=Onionprobe
+Documentation=https://onionservices.torproject.org/apps/web/onionprobe
+After=network.target
+
+[Service]
+EnvironmentFile={{ onionprobe_path }}/onionprobe.conf
+ExecStart={{ onionprobe_virtualenv }}/bin/onionprobe -c $CONFIG $DAEMON_OPTS
+User={{ onionprobe_user }}
+Group={{ onionprobe_group }}
+CapabilityBoundingSet=
+DeviceAllow=/dev/null rw
+NoNewPrivileges=yes
+PrivateTmp=yes
+PrivateUsers=yes
+ProtectControlGroups=true
+ProtectHome=yes
+PrivateDevices=yes
+ProtectControlGroups=true
+ProtectHostname=true
+ProtectProc=invisible
+ProtectKernelLogs=true
+ProtectKernelModules=yes
+ProtectKernelTunables=yes
+ProtectSystem=full
+ReadOnlyDirectories=/
+InaccessibleDirectories=/home
+RuntimeDirectory={{ onionprobe_project_name }}
+StateDirectory={{ onionprobe_project_name }}
+CacheDirectory={{ onionprobe_project_name }}
+LogsDirectory={{ onionprobe_project_name }}
+ConfigurationDirectory={{ onionprobe_project_name }}
+RestrictNamespaces=true
+LockPersonality=true
+ProtectClock=true
+RestrictRealtime=true
+RemoveIPC=true
+RestrictSUIDSGID=true
+ProcSubset=pid
+DevicePolicy=closed
+RestrictAddressFamilies=AF_INET AF_INET6
+SystemCallArchitectures=native
+UMask=0077
+MemoryDenyWriteExecute=true
+
+[Install]
+WantedBy=multi-user.target

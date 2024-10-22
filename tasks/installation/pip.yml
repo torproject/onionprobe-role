@@ -1,0 +1,15 @@
+---
+#
+# Onionprobe installation using pip
+#
+# Copyright (C) 2024 The Tor Project, Inc.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+- name: Installs Onionprobe using pip
+  block:
+  - name: Install onionprobe package
+    ansible.builtin.pip:
+      name: onionprobe
+      extra_args: '--upgrade'
+      virtualenv: "{{ onionprobe_virtualenv }}"

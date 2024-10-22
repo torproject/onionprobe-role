@@ -1,16 +1,56 @@
 ---
-- name: Converge
+#
+# Onionprobe Ansible role test playbook
+#
+# Copyright (C) 2024 The Tor Project, Inc.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+- name: Standalone, full monitor operation mode
   hosts: all
 
   # Gathering facts requires a container with Python installed
   gather_facts: true
 
   vars:
+    # Test the monitoring mode
+    onionprobe_operation: monitor
+
     # Configure Podman as the container runtime
-    onionprobe_container_runtime: 'podman'
+    onionprobe_container_runtime: podman
 
     # Do not enable the service, since the image is not started with systemd as PID 1
-    onionprobe_monitor_enable_service: false
+    onionprobe_enable_service: false
+
+  pre_tasks:
+    # Sudo is needed by some Ansible modules, and may not be available in the
+    # container instance
+    - name: Install sudo
+      ansible.builtin.package:
+        name: sudo
+
+    # This is only installed so paths like /etc/systemd/system become available.
+    # Trying to start services will only throw errors like
+    # "System has not been booted with systemd as init system (PID 1). Can't
+    # operate. Failed to connect to bus: Host is down".
+    - name: Install systemd
+      ansible.builtin.package:
+        name: systemd
+
+  roles:
+    - onionprobe
+
+- name: Single operation mode
+  hosts: all
+
+  # Gathering facts requires a container with Python installed
+  gather_facts: true
+
+  vars:
+    # Test the monitoring mode
+    onionprobe_operation: single
+
+    # Do not enable the service, since the image is not started with systemd as PID 1
+    onionprobe_enable_service: false
 
   pre_tasks:
     # Sudo is needed by some Ansible modules, and may not be available in the

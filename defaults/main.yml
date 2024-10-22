@@ -1,52 +1,175 @@
 ---
 #
-# Basic
+# Onionprobe Ansible role configuration
+#
+# Copyright (C) 2024 The Tor Project, Inc.
+# SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-# Control the managed node's mode of operation
-onionprobe_project_name: onionprobe-monitor
-onionprobe_mode: monitor
-onionprobe_config_generation_script: ''
-onionprobe_config: ''
-onionprobe_configurator_entrypoint: ''
-onionprobe_configurator_params: ''
-onionprobe_container_runtime: 'docker'
+# Onionprobe installation mode: controls how it's installed.
+#
+# Available options:
+#
+# 'repository': installs the needed dependencies and clone the Onionprobe repository.
+#
+#               * Dependencies must be available in the distribution.
+#
+# 'distro'    : installs Onionprobe from a package, if available in the distro.
+#
+#               Requirements:
+#
+#               * The 'onionprobe' package must be available through the system's
+#                 package manager.
+#
+# 'pip'       : installs Onionprobe and it's dependencies using pip.
+#
+#               Requirements:
+#
+#               * Pip.
+#
+#               * Virtualenv.
+#
+onionprobe_installation: repository
+
+# Onionprobe operation mode: specifies how it should run.
+#
+# Available options:
+#
+# 'manual'    : do not manage the way Onionprobe runs: this is left to the operator
+#               to configure elsewhere.
+#
+# 'single'    : runs just the Onionprobe service, and nothing else.
+#
+#               Requirements:
+#
+#               * Systemd must be available in the system, and is used to
+#                 manage the service.
+#
+# 'standalone': runs the full standalone monitoring monitoring node:
+#               https://onionservices.torproject.org/apps/web/onionprobe/standalone/
+#
+#               Requirements:
+#
+#               * Variable 'onionprobe_installation' must be set to
+#                 'repository', as the package usually don't ship the needed
+#                 container configuration.
+#
+#               * Docker Compose or Podman Compose must be installed and
+#                 configured.
+#
+#               * Systemd must be available in the system, and is used to
+#                 manage the service.
+#
+onionprobe_operation: monitor
+
+# Onionprobe Project name
+#
+# This is mainly used as an identifier to configure and distinguish services.
+onionprobe_project_name: onionprobe
+
+# Onionprobe virtualenv
+#
+# Sets virtualenv location used by the 'pip' installation method.
+onionprobe_virtualenv: /usr/local/share/onionprobe
 
 #
-# Monitor mode
-#
-
-# Whether to automatically enable the service
-onionprobe_monitor_enable_service: true
-
 # User, group and folder
-onionprobe_monitor_user: onionprobe-monitor
-onionprobe_monitor_service: onionprobe-monitor
-onionprobe_monitor_uid: 2000
-onionprobe_monitor_gid: 2000
-onionprobe_monitor_path: /var/lib/onionprobe-monitor
+#
 
-# Repository
+onionprobe_user    : onionprobe
+onionprobe_group   : onionprobe
+onionprobe_uid     : 2000
+onionprobe_gid     : 2000
+onionprobe_path    : /var/lib/onionprobe
+
+# Repository location
 onionprobe_repo: https://gitlab.torproject.org/tpo/onion-services/onionprobe.git
 
-# Prometheus
-onionprobe_monitor_prometheus_web_external_url: 'http://localhost:9090'
+#
+# Service
+#
 
-# Grafana
-onionprobe_monitor_grafana_database_password: unsafe-password-please-change
-onionprobe_monitor_grafana_smtp_enabled: false
-onionprobe_monitor_grafana_smtp_host: localhost:25
-onionprobe_monitor_grafana_smtp_user: ''
-onionprobe_monitor_grafana_stmp_password: ''
-onionprobe_monitor_grafana_smtp_starttls_policy: ''
-onionprobe_monitor_grafana_server_domain: ''
-onionprobe_monitor_grafana_server_root_url: ''
-onionprobe_monitor_grafana_plugins_enable_alpha: false
+# Service name
+onionprobe_service : onionprobe
 
-# Alertmanager
-onionprobe_monitor_alertmanager_template: alertmanager/alertmanager.yml.j2
-onionprobe_monitor_smtp_smarthost: mail.example.org:587
-onionprobe_monitor_smtp_email: changeme@example.org
-onionprobe_monitor_smtp_username: changeme
-onionprobe_monitor_smtp_auth_password: changeme
-onionprobe_monitor_altermanager_default_recipient_email: changeme@example.org
+# Whether to automatically enable the service
+#
+# Systemd might not be available in some testing environments, where makes
+# sense to keep the service disabled.
+onionprobe_enable_service: true
+
+#
+# Onionprobe configuration file relative to the computed configuration path
+#
+# This is path is computed depending on the installation mode:
+#
+# 'distro'    : config path is set to /etc/onionprobe
+# 'pip'       : config path is set to /var/lib/onionprobe/configs
+# 'repository': config path is set to the value of onionprobe_path
+#
+# Examples:
+#
+#   # For repository installation, will look after
+#   # {{ onionprobe_path }}/configs/tor.yaml
+#   onionprobe_config: 'configs/tor.yaml'
+#
+#   # For repository installation, will look after
+#   # {{ onionprobe_path }}/contrib/configs/myconfig.yaml
+#   onionprobe_config: 'contrib/configs/myconfig.yaml'
+#
+#   # For pip and distro installation, will look after either
+#   # {{ onionprobe_path }}/configs/myconfig.yaml or /etc/onionprobe/myconfig.yaml
+#   onionprobe_config: 'myconfig.yaml'
+#
+onionprobe_config: 'configs/tor.yaml'
+
+# Path for a config generation script relative to the computed configuration path
+#
+# This is path is computed with the same logic for the onionprobe_config parameter
+#
+onionprobe_config_generation_script : ''
+
+# Daemon options no specified in the Onionprobe configuration
+onionprobe_daemon_opts: ''
+
+#
+# Standalone monitor mode options
+#
+
+# The container runtime to use
+#
+# Note that this role won't manage the container runtime installation.
+# That needs to be done elsewhere.
+#
+onionprobe_container_runtime: 'docker'
+
+# Configurator container parameters
+onionprobe_configurator_entrypoint  : ''
+onionprobe_configurator_params      : ''
+
+# Prometheus options as documented at
+# https://prometheus.io/docs/prometheus/latest/command-line/prometheus/
+onionprobe_prometheus_web_external_url: 'http://localhost:9090'
+
+# Alertmanager options as documented at
+# https://prometheus.io/docs/alerting/latest/configuration/
+onionprobe_alertmanager_template                : alertmanager/alertmanager.yml.j2
+onionprobe_smtp_smarthost                       : mail.example.org:587
+onionprobe_smtp_email                           : changeme@example.org
+onionprobe_smtp_username                        : changeme
+onionprobe_smtp_auth_password                   : changeme
+onionprobe_altermanager_default_recipient_email : changeme@example.org
+
+# Grafana configuration
+onionprobe_grafana_database_password: unsafe-password-please-change
+
+# Grafana options as documented at
+# https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana/
+onionprobe_grafana_smtp_enabled         : false
+onionprobe_grafana_smtp_host            : localhost:25
+onionprobe_grafana_smtp_user            : ''
+onionprobe_grafana_stmp_password        : ''
+onionprobe_grafana_smtp_starttls_policy : ''
+onionprobe_grafana_server_domain        : ''
+onionprobe_grafana_server_root_url      : ''
+onionprobe_grafana_plugins_enable_alpha : false
