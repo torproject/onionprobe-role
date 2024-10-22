@@ -6,7 +6,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-- name: Install Onionprobe dependencies:
+- name: Install Onionprobe dependencies
   block:
     - name: Install Onionprobe dependencies on Debian-like systems
       ansible.builtin.apt:
