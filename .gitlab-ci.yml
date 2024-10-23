@@ -7,7 +7,7 @@
 #
 
 # Podman CI workflow
-pytest_podman:
+molecule_podman:
   stage: test
 
   image:
@@ -29,7 +29,7 @@ pytest_podman:
     - sudo -u podman molecule test -s podman
 
 # Run Ansible tests directly in the CI containers
-#pytest_local:
+#molecule_local:
 #  stage: test
 #
 #  image: debian:bookworm
