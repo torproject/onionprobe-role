@@ -12,3 +12,4 @@
     enabled: yes
     daemon_reload: yes
     state: restarted
+  when: onionprobe_enable_service is true

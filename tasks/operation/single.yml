@@ -21,4 +21,4 @@
   when: onionprobe_installation == 'pip'
 
 - name: Manage Onionprobe's Systemd service
-  include_tasks: ../service/systemd.yml
+  include_tasks: ../resources/service/systemd.yml

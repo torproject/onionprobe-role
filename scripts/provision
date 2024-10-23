@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+#
+# Helper script to setup a development environment
+#
+# Copyright (C) 2024 The Tor Project, Inc.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+# Parameters
+DIRNAME="`dirname $0`"
+BASEPATH="$DIRNAME/.."
+DEPENDENCIES_APT="podman python3-pip ansible"
+DEPENDENCIES_PIP="molecule-plugins[podman]"
+
+# Check for sudo
+if [ "`whoami`" != "root" ]; then
+  SUDO="sudo"
+fi
+
+# System upgrade
+$SUDO apt-get update
+$SUDO apt-get upgrade -y
+
+# Install dependencies
+$SUDO apt install -y $DEPENDENCIES_APT
+$SUDO python3 -m pip install $DEPENDENCIES_PIP --break-system-packages
+
+# Create a symlink so molecule can find the role
+if [ ! -e "$BASEPATH/molecule/podman/roles/onionprobe"]; then
+  mkdir -p $BASEPATH/molecule/podman/roles && \
+    ln -sf ../../.. $BASEPATH/molecule/podman/roles/onionprobe
+fi
