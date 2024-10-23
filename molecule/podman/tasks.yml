@@ -19,3 +19,18 @@
 - name: Install systemd
   ansible.builtin.package:
     name: systemd
+
+# Install setuptools, needed by ansible.builtin.pip
+- name: Install setuptools
+  ansible.builtin.package:
+    name: python3-setuptools
+
+# Install pip, needed by ansible.builtin.pip
+- name: Install pip
+  ansible.builtin.package:
+    name: python3-pip
+
+# Install virtualenv, needed by ansible.builtin.pip
+- name: Install virtualenv
+  ansible.builtin.package:
+    name: python3-virtualenv
