@@ -117,7 +117,7 @@
         msg:
           - "The Onionprobe Ansible role currently does not handle the environmente file on {{ ansible_distribution }}."
           - "Please manage it manually, or create a merge request."
-      when: ansible_distribution =! 'Debian' and ansible_distribution =! 'Ubuntu'
+      when: ansible_distribution != 'Debian' and ansible_distribution != 'Ubuntu'
 
   - name: Manage Onionprobe's Systemd service
     include_tasks: ../resources/service/systemd.yml
