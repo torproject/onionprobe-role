@@ -17,11 +17,13 @@ It can configure [Onionprobe][] to run as a single service or in the
 
 * [Ansible][].
 * [Systemd][], if the service is to be managed.
+* The requirements to run [ansible.builtin.pip][] if installing Onionprobe [from PyPI][].
 * For the [standalone][] operation mode:
   * [Docker][] and [Docker Compose][], or [Podman][] and [Podman Compose][] should be
     available in the remote system.
 
 [Systemd]: https://systemd.io
+[ansible.builin.pip]: https://docs.ansible.com/ansible/latest/collections/ansible/builtin/pip_module.html
 [standalone]: https://onionservices.torproject.org/apps/web/onionprobe/standalone/
 [Docker]: https://docker.com
 [Podman]: https://podman.io
