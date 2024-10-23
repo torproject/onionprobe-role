@@ -7,7 +7,7 @@
 #
 
 - name: Standalone, full monitor operation mode
-  hosts: all
+  hosts: standalone
 
   # Gathering facts requires a container with Python installed
   gather_facts: true
@@ -16,6 +16,9 @@
     # Test the monitoring mode
     onionprobe_operation: monitor
 
+    # Install via repository
+    onionprobe_installation: repository
+
     # Configure Podman as the container runtime
     onionprobe_container_runtime: podman
 
@@ -23,50 +26,77 @@
     onionprobe_enable_service: false
 
   pre_tasks:
-    # Sudo is needed by some Ansible modules, and may not be available in the
-    # container instance
-    - name: Install sudo
-      ansible.builtin.package:
-        name: sudo
-
-    # This is only installed so paths like /etc/systemd/system become available.
-    # Trying to start services will only throw errors like
-    # "System has not been booted with systemd as init system (PID 1). Can't
-    # operate. Failed to connect to bus: Host is down".
-    - name: Install systemd
-      ansible.builtin.package:
-        name: systemd
+    - name: Run pre-tasks
+      include_tasks: tasks.yml
 
   roles:
     - onionprobe
 
-- name: Single operation mode
-  hosts: all
+- name: Single operation mode installing Onionprobe via distro package
+  hosts: single-distro
 
   # Gathering facts requires a container with Python installed
   gather_facts: true
 
   vars:
-    # Test the monitoring mode
+    # Test the single mode
     onionprobe_operation: single
+
+    # Install via distro
+    onionprobe_installation: distro
 
     # Do not enable the service, since the image is not started with systemd as PID 1
     onionprobe_enable_service: false
 
   pre_tasks:
-    # Sudo is needed by some Ansible modules, and may not be available in the
-    # container instance
-    - name: Install sudo
-      ansible.builtin.package:
-        name: sudo
+    - name: Run pre-tasks
+      include_tasks: tasks.yml
 
-    # This is only installed so paths like /etc/systemd/system become available.
-    # Trying to start services will only throw errors like
-    # "System has not been booted with systemd as init system (PID 1). Can't
-    # operate. Failed to connect to bus: Host is down".
-    - name: Install systemd
-      ansible.builtin.package:
-        name: systemd
+  roles:
+    - onionprobe
+
+- name: Single operation mode installing Onionprobe via pip
+  hosts: single-pip
+
+  # Gathering facts requires a container with Python installed
+  gather_facts: true
+
+  vars:
+    # Test the single mode
+    onionprobe_operation: single
+
+    # Install via distro
+    onionprobe_installation: pip
+
+    # Do not enable the service, since the image is not started with systemd as PID 1
+    onionprobe_enable_service: false
+
+  pre_tasks:
+    - name: Run pre-tasks
+      include_tasks: tasks.yml
+
+  roles:
+    - onionprobe
+
+- name: Single operation mode installing Onionprobe via repository
+  hosts: single-repository
+
+  # Gathering facts requires a container with Python installed
+  gather_facts: true
+
+  vars:
+    # Test the single mode
+    onionprobe_operation: single
+
+    # Install via distro
+    onionprobe_installation: repository
+
+    # Do not enable the service, since the image is not started with systemd as PID 1
+    onionprobe_enable_service: false
+
+  pre_tasks:
+    - name: Run pre-tasks
+      include_tasks: tasks.yml
 
   roles:
     - onionprobe

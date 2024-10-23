@@ -9,7 +9,7 @@
 # Parameters
 DIRNAME="`dirname $0`"
 BASEPATH="$DIRNAME/.."
-DEPENDENCIES_APT="podman python3-pip ansible"
+DEPENDENCIES_APT="podman podman-compose python3-pip ansible"
 DEPENDENCIES_PIP="molecule-plugins[podman]"
 
 # Check for sudo

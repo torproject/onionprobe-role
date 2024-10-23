@@ -82,7 +82,12 @@ onionprobe_uid     : 2000
 onionprobe_gid     : 2000
 onionprobe_path    : /var/lib/onionprobe
 
+#
 # Repository location
+#
+# Defaults to the upstream Onionprobe repository, but can be overriden to
+# point to a fork.
+#
 onionprobe_repo: https://gitlab.torproject.org/tpo/onion-services/onionprobe.git
 
 #
@@ -90,7 +95,7 @@ onionprobe_repo: https://gitlab.torproject.org/tpo/onion-services/onionprobe.git
 #
 
 # Service name
-onionprobe_service : onionprobe
+onionprobe_service: onionprobe
 
 # Whether to automatically enable the service
 #
@@ -98,39 +103,70 @@ onionprobe_service : onionprobe
 # sense to keep the service disabled.
 onionprobe_enable_service: true
 
+# Daemon options not specified in the Onionprobe configuration
 #
-# Onionprobe configuration file relative to the computed configuration path
+# This setting is ignored by the standalone operation mode
+onionprobe_daemon_opts: ''
+
+# Onionprobe configuration folder
 #
-# This is path is computed depending on the installation mode:
+# When empty, the configuration path is computed depending on the installation
+# mode:
 #
-# 'distro'    : config path is set to /etc/onionprobe
-# 'pip'       : config path is set to /var/lib/onionprobe/configs
-# 'repository': config path is set to the value of onionprobe_path
+#  'distro'    : config path is set to /etc/onionprobe
+#  'pip'       : config path is set to {{ onionprobe_virtualenv }}/share/onionprobe/configs
+#  'repository': config path is set to {{ onionprobe_path }}/configs
 #
 # Examples:
 #
-#   # For repository installation, will look after
-#   # {{ onionprobe_path }}/configs/tor.yaml
-#   onionprobe_config: 'configs/tor.yaml'
+#   onionprobe_config_path: '{{ onionprobe_path }}'
+#   onionprobe_config_path: '{{ onionprobe_path }}/configs'
+#   onionprobe_config_path: '{{ onionprobe_path }}/contrib/configs'
 #
-#   # For repository installation, will look after
-#   # {{ onionprobe_path }}/contrib/configs/myconfig.yaml
-#   onionprobe_config: 'contrib/configs/myconfig.yaml'
-#
-#   # For pip and distro installation, will look after either
-#   # {{ onionprobe_path }}/configs/myconfig.yaml or /etc/onionprobe/myconfig.yaml
-#   onionprobe_config: 'myconfig.yaml'
-#
-onionprobe_config: 'configs/tor.yaml'
+onionprobe_config_path: ''
 
-# Path for a config generation script relative to the computed configuration path
 #
-# This is path is computed with the same logic for the onionprobe_config parameter
+# Onionprobe configuration file relative to {{ onionprobe_config_path }}
 #
-onionprobe_config_generation_script : ''
+# Do not leave this empty.
+#
+onionprobe_config: 'tor.yaml'
 
-# Daemon options no specified in the Onionprobe configuration
-onionprobe_daemon_opts: ''
+# Path for a configuration file to be copied to the remote host
+#
+# This file should be stored in the Ansible configuration folder/repository,
+# and it's copied to the remote host.
+#
+# Leaving this empty means that no configuration file will be copied to
+# the remote host, but {{ onionprobe_config }} can still be used to
+# point to an existing file in the remote host.
+onionprobe_config_src: ''
+
+# Path where a config generation script is stored
+#
+# When empty, the configuration path is computed depending on the installation
+# mode:
+#
+#  'distro'    : config path is set to /usr/share/onionprobe/examples
+#  'pip'       : config path is set to {{ onionprobe_virtualenv }}/share/onionprobe/examples
+#  'repository': config path is set to {{ onionprobe_path }}/packages
+#
+# Examples:
+#
+#   onionprobe_config_path: '/usr/share/onionprobe/examples'
+#   onionprobe_config_path: '{{ onionprobe_path }}/packages'
+#   onionprobe_config_path: '{{ onionprobe_virtualenv }}/share/onionprobe/examples
+#
+onionprobe_config_script_path: ''
+
+# Path for a config generation script to be copied to the remote host
+#
+# This script should be stored in the Ansible configuration folder/repository,
+# and it's copied to the remote host.
+#
+# Leaving this empty disables the config generation script (for the single operation
+# mode) or uses the default one (for the standalone mode).
+onionprobe_config_script_src : ''
 
 #
 # Standalone monitor mode options
@@ -143,9 +179,18 @@ onionprobe_daemon_opts: ''
 #
 onionprobe_container_runtime: 'docker'
 
-# Configurator container parameters
-onionprobe_configurator_entrypoint  : ''
-onionprobe_configurator_params      : ''
+# Config script parameters
+#
+# Allow passing parameters to the config generation script.
+#
+# Example:
+#
+#   onionprobe_configurator_params: --loop --wait 3600 --config_overrides rounds=20 descriptor_max_retries=20 descriptor_timeout=120 http_connect_timeout=120 http_connect_max_retries=6 http_read_timeout=120 --output_folder /srv/onionprobe/contrib/configs --config_template /srv/onionprobe/configs/tor.yaml
+#
+# For the standalone operation mode, it's recommended to set "--wait" and
+# "rounds=" params, so the configuration container stops periodically, ensuring
+# that whenever it restarts a fresh configuration is picked.
+onionprobe_config_script_params: ''
 
 # Prometheus options as documented at
 # https://prometheus.io/docs/prometheus/latest/command-line/prometheus/

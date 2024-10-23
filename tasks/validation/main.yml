@@ -13,3 +13,15 @@
         quiet: true
         that:
           - "onionprobe_operation != 'monitor' or (onionprobe_operation == 'monitor' and onionprobe_installation == 'repository')"
+
+    - name: Checks that the configuration file is set
+      ansible.builtin.assert:
+        quiet: true
+        that:
+          - "onionprobe_config != ''"
+
+    - name: Ensure onionprobe_config_src and onionprobe_config_script_src are not simultaneously set
+      ansible.builtin.assert:
+        quiet: true
+        that:
+          - "onionprobe_config_src == '' or onionprobe_config_script_src == ''"

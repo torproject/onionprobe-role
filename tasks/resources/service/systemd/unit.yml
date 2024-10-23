@@ -6,6 +6,15 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
+#- name: Configure the systemd service file for the monitoring node
+#  ansible.builtin.copy:
+#    remote_src: true
+#    src: "{{ onionprobe_path }}/configs/systemd/onionprobe-monitor.service"
+#    dest: "/etc/systemd/system/{{ onionprobe_service }}.service"
+#    owner: root
+#    group: root
+#    mode: '0644'
+
 - name: Configure the Onionprobe service
   ansible.builtin.template:
     src: "systemd/onionprobe-{{ onionprobe_operation }}.service.j2"
