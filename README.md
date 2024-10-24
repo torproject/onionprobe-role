@@ -13,6 +13,23 @@ It can configure [Onionprobe][] to run as a single service or in the
 [Git]: https://git-scm.com
 [from PyPI]: https://pypi.org/project/onionprobe/
 
+## Supported systems
+
+Tested and supported:
+
+* [Debian](https://debian.org).
+
+Supported:
+
+* [Ubuntu](https://ubuntu.com).
+
+Other systems may have only _partial_ support:
+
+* Installation from distro package may not be supported.
+* Service management may be only partially supported.
+
+Merge requests are welcome to cover more Operating Systems.
+
 ## Requirements
 
 * [Ansible][].
@@ -29,21 +46,6 @@ It can configure [Onionprobe][] to run as a single service or in the
 [Podman]: https://podman.io
 [Docker Compose]: https://docs.docker.com/compose/
 [Podman Compose]: https://github.com/containers/podman-compose
-
-## Supported systems
-
-Tested and supported:
-
-* [Debian](https://debian.org).
-
-Supported:
-
-* [Ubuntu](https://ubuntu.com).
-
-Other systems are untested and may have _partial_ support:
-
-* Installation from distro package not supported.
-* Service management partially supported.
 
 ## Usage
 
