@@ -38,25 +38,14 @@
     # Note that Git is able to clone to an empty folder, so there's no harm
     # in creating this folder in the first run when the repository is still not
     # cloned.
-    - name: installation | repository | Manage the folder
+    - name: installation | repository | Manage the Onionprobe folder
       ansible.builtin.file:
         path: "{{ onionprobe_path }}"
         owner: "{{ onionprobe_user }}"
-        group: "{{ onionprobe_user }}"
+        group: "{{ onionprobe_group }}"
         state: directory
         # We _could_ set the mode to 0750, but then we would have trouble sharing
         # this folder with containers
-        mode: '0755'
-        recurse: false
-
-    # Useful in case something is already there and with other ownership, such as
-    # alertmanager's configuration
-    - name: installation | repository | Manage the onionprobe repository permission
-      ansible.builtin.file:
-        path: "{{ onionprobe_path }}"
-        state: directory
-        owner: "{{ onionprobe_user }}"
-        group: "{{ onionprobe_user }}"
         mode: '0755'
         recurse: false
 
