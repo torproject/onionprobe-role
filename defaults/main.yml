@@ -73,6 +73,20 @@ onionprobe_project_name: onionprobe
 onionprobe_virtualenv: /usr/local/share/onionprobe
 
 #
+# Repository version
+#
+# Ensure Onionprobe's repository version is set to a specific version.
+#
+# Allowed values are specified at
+# https://docs.ansible.com/ansible/latest/collections/ansible/builtin/git_module.html
+#
+# Having it set to 'HEAD' may not be alwayes considered a good practice:
+# https://ansible.readthedocs.io/projects/lint/rules/latest/
+#
+#onionprobe_repository_version: 1.2.0
+onionprobe_repository_version: HEAD
+
+#
 # User, group and folder
 #
 
