@@ -66,21 +66,34 @@
         owner: "{{ owner }}"
         group: "{{ group }}"
         mode: '0755'
+      # We could trigger script execution only when the config script changed
+      #register: onionprobe_config_script_copy
+
+    #- name: configuration | onionprobe | Checks if configuration already exists
+    #  ansible.builtin.stat:
+    #    path: "{{ onionprobe_config_path }}/{{ onionprobe_config }}"
+    #  register: onionprobe_config_stat
 
     - name: configuration | onionprobe | Runs configuration script as root when not in standalone mode
+      #when: onionprobe_config.script_copy.changed and onionprobe_operation != 'standalone' and owner == 'root'
       when: onionprobe_operation != 'standalone' and owner == 'root'
       ansible.builtin.command:
         cmd: "{{ onionprobe_config_script_path }}/{{ onionprobe_config_script_src | basename }} {{ onionprobe_config_script_params }}"
         chdir: "{{ onionprobe_config_path }}"
+      # This needs a better change detection
+      changed_when: true
       notify: Restart the Onionprobe service
 
     - name: configuration | onionprobe | Runs configuration script as the onionprobe user when not in standalone mode
+      #when: onionprobe_config.script_copy.changed and onionprobe_operation != 'standalone' and owner != 'root'
       when: onionprobe_operation != 'standalone' and owner != 'root'
       ansible.builtin.command:
         cmd: "{{ onionprobe_config_script_path }}/{{ onionprobe_config_script_src | basename }} {{ onionprobe_config_script_params }}"
         chdir: "{{ onionprobe_config_path }}"
         become: true
         become_user: "{{ owner }}"
+      # This needs a better change detection
+      changed_when: true
       notify: Restart the Onionprobe service
 
 - name: configuration | onionprobe | Manages Onionprobe configuration file
@@ -89,7 +102,7 @@
       when: onionprobe_config_src | length != 0
       ansible.builtin.copy:
         src: "{{ onionprobe_config_src }}"
-        dest: "{{ onionprobe_path }}/{{ onionprobe_config }}"
+        dest: "{{ onionprobe_config_path }}/{{ onionprobe_config }}"
         owner: "{{ owner }}"
         group: "{{ group }}"
         mode: '0755'

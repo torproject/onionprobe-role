@@ -198,7 +198,7 @@ onionprobe_container_runtime: 'docker'
 #
 # Example:
 #
-#   onionprobe_configurator_params: >
+#   onionprobe_config_script_params: >
 #     --loop --wait 3600
 #     --output_folder /srv/onionprobe/contrib/configs
 #     --config_template /srv/onionprobe/configs/tor.yaml
