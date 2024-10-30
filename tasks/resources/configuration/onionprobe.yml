@@ -28,6 +28,7 @@
       ansible.builtin.file:
         path: "{{ onionprobe_config_path }}"
         state: directory
+        mode: '0755'
 
 - name: configuration | onionprobe | Handle Onionprobe config script path
   when: onionprobe_config_script_path | length == 0
@@ -70,14 +71,14 @@
       when: onionprobe_operation != 'standalone' and owner == 'root'
       ansible.builtin.command:
         cmd: "{{ onionprobe_config_script_path }}/{{ onionprobe_config_script_src | basename }} {{ onionprobe_config_script_params }}"
-        chdir: "{{ onionprobe_configpath }}"
+        chdir: "{{ onionprobe_config_path }}"
       notify: Restart the Onionprobe service
 
     - name: configuration | onionprobe | Runs configuration script as the onionprobe user when not in standalone mode
       when: onionprobe_operation != 'standalone' and owner != 'root'
       ansible.builtin.command:
         cmd: "{{ onionprobe_config_script_path }}/{{ onionprobe_config_script_src | basename }} {{ onionprobe_config_script_params }}"
-        chdir: "{{ onionprobe_configpath }}"
+        chdir: "{{ onionprobe_config_path }}"
         become: true
         become_user: "{{ owner }}"
       notify: Restart the Onionprobe service

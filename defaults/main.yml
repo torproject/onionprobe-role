@@ -72,7 +72,6 @@ onionprobe_project_name: onionprobe
 # Sets virtualenv location used by the 'pip' installation method.
 onionprobe_virtualenv: /usr/local/share/onionprobe
 
-#
 # Repository version
 #
 # Ensure Onionprobe's repository version is set to a specific version.
