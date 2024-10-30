@@ -18,6 +18,7 @@ lint:
     - python3 -m pip install ansible-lint --break-system-packages
     - ansible --version
     - ansible-lint --version
+    - mkdir -p molecule/podman/roles && ln -s ../../.. molecule/podman/roles/onionprobe
 
   script:
     - ansible-lint
