@@ -13,7 +13,7 @@
         msg:
           - "The Onionprobe Ansible role currently does not handle dependencies on {{ ansible_distribution }}."
           - "Please manage them manually, or create a merge request."
-      when: ansible_distribution != 'Debian' and ansible_distribution != 'Ubuntu'
+      when: ansible_os_family != 'Debian'
 
     - name: Install Onionprobe dependencies on Debian-like systems
       ansible.builtin.apt:
@@ -28,7 +28,7 @@
           - python3-pytest
           - python3-requests
           - python3-socks
-      when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+      when: ansible_os_family == 'Debian'
 
 - name: Manage group and user
   include_tasks: ../resources/environment/user.yml
