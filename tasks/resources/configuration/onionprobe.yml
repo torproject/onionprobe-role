@@ -66,33 +66,42 @@
         owner: "{{ owner }}"
         group: "{{ group }}"
         mode: '0755'
-      # We could trigger script execution only when the config script changed
-      #register: onionprobe_config_script_copy
 
-    #- name: configuration | onionprobe | Checks if configuration already exists
-    #  ansible.builtin.stat:
-    #    path: "{{ onionprobe_config_path }}/{{ onionprobe_config }}"
-    #  register: onionprobe_config_stat
+    - name: configuration | onionprobe | Checks for existing configuration before running the config script
+      ansible.builtin.stat:
+        path: "{{ onionprobe_config_path }}/{{ onionprobe_config }}"
+      register: onionprobe_config_pre_script_stat
 
     - name: configuration | onionprobe | Runs configuration script as root when not in standalone mode
-      #when: onionprobe_config.script_copy.changed and onionprobe_operation != 'standalone' and owner == 'root'
       when: onionprobe_operation != 'standalone' and owner == 'root'
       ansible.builtin.command:
         cmd: "{{ onionprobe_config_script_path }}/{{ onionprobe_config_script_src | basename }} {{ onionprobe_config_script_params }}"
         chdir: "{{ onionprobe_config_path }}"
-      # This needs a better change detection
       changed_when: true
-      notify: Restart the Onionprobe service
+      #notify: Restart the Onionprobe service
 
     - name: configuration | onionprobe | Runs configuration script as the onionprobe user when not in standalone mode
-      #when: onionprobe_config.script_copy.changed and onionprobe_operation != 'standalone' and owner != 'root'
       when: onionprobe_operation != 'standalone' and owner != 'root'
       ansible.builtin.command:
         cmd: "{{ onionprobe_config_script_path }}/{{ onionprobe_config_script_src | basename }} {{ onionprobe_config_script_params }}"
         chdir: "{{ onionprobe_config_path }}"
         become: true
         become_user: "{{ owner }}"
-      # This needs a better change detection
+      changed_when: true
+      #notify: Restart the Onionprobe service
+
+    - name: configuration | onionprobe | Checks changes in configuration after running the config script
+      ansible.builtin.stat:
+        path: "{{ onionprobe_config_path }}/{{ onionprobe_config }}"
+      register: onionprobe_config_post_script_stat
+
+    # Workaround for change detection in Onionprobe's configuration after the config script is run
+    # https://stackoverflow.com/questions/62182998/how-do-you-notify-a-handler-in-ansible-based-solely-on-a-conditional
+    - name: configuration | onionprobe | Notify the Onionprobe service if configuration has changed
+      when: onionprobe_config_post_script_stat != onionprobe_config_pre_script_stat
+      ansible.builtin.assert:
+        that: true
+        quiet: true
       changed_when: true
       notify: Restart the Onionprobe service
 
