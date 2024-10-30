@@ -6,9 +6,9 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-- name: Configure alertmanager
+- name: configuration | alertmanager | Configure alertmanager
   block:
-    - name: Create the alertmanager contrib config folder
+    - name: configuration | alertmanager | Create the alertmanager contrib config folder
       ansible.builtin.file:
         path    : "{{ onionprobe_path }}/contrib/configs/alertmanager"
         owner   : "{{ onionprobe_user }}"
@@ -17,7 +17,7 @@
         state   : directory
         recurse : false
 
-    - name: Setup the altertmanager contrib config
+    - name: configuration | alertmanager | Setup the altertmanager contrib config
       # Ownership here depends on the UID and GID used by the Alertmanager container service
       ansible.builtin.template:
         src   : "{{ onionprobe_alertmanager_template }}"
@@ -25,4 +25,4 @@
         owner : "nobody"
         group : "nogroup"
         mode  : '0640'
-        force : yes
+        force : true

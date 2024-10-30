@@ -6,51 +6,51 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-- name: Handle Onionprobe config path
+- name: configuration | onionprobe | Handle Onionprobe config path
   when: onionprobe_config_path == ''
   block:
-    - name: Set onionprobe_config_path for the distro installation method
+    - name: configuration | onionprobe | Set onionprobe_config_path for the distro installation method
       when: onionprobe_installation == 'distro'
       ansible.builtin.set_fact:
         onionprobe_config_path: /etc/onionprobe
 
-    - name: Set onionprobe_config_path for the pip installation method
+    - name: configuration | onionprobe | Set onionprobe_config_path for the pip installation method
       when: onionprobe_installation == 'pip'
       ansible.builtin.set_fact:
         onionprobe_config_path: "{{ onionprobe_virtualenv }}/share/onionprobe/configs"
 
-    - name: Set onionprobe_config_path for the repository installation method
+    - name: configuration | onionprobe | Set onionprobe_config_path for the repository installation method
       when: onionprobe_installation == 'repository'
       ansible.builtin.set_fact:
         onionprobe_config_path: "{{ onionprobe_path }}/configs"
 
-    - name: Manage the configuration path
+    - name: configuration | onionprobe | Manage the configuration path
       ansible.builtin.file:
         path: "{{ onionprobe_config_path }}"
         state: directory
 
-- name: Handle Onionprobe config script path
+- name: configuration | onionprobe | Handle Onionprobe config script path
   when: onionprobe_config_script_path == ''
   block:
-    - name: Set onionprobe_config_script_path for the distro installation method
+    - name: configuration | onionprobe | Set onionprobe_config_script_path for the distro installation method
       when: onionprobe_installation == 'distro'
       ansible.builtin.set_fact:
         onionprobe_config_script_path: /usr/onionprobe/examples
 
-    - name: Set onionprobe_config_script_path for the pip installation method
+    - name: configuration | onionprobe | Set onionprobe_config_script_path for the pip installation method
       when: onionprobe_installation == 'pip'
       ansible.builtin.set_fact:
         onionprobe_config_script_path: "{{ onionprobe_virtualenv }}/share/onionprobe/examples"
 
-    - name: Set onionprobe_config_script_path for the repository installation method
+    - name: configuration | onionprobe | Set onionprobe_config_script_path for the repository installation method
       when: onionprobe_installation == 'repository'
       ansible.builtin.set_fact:
         onionprobe_config_script_path: "{{ onionprobe_path }}/packages"
 
-- name: Manage the config generation script
+- name: configuration | onionprobe | Manage the config generation script
   when: onionprobe_config_script_src != ''
   block:
-    - name: Manage the config generation script path
+    - name: configuration | onionprobe | Manage the config generation script path
       ansible.builtin.file:
         path: "{{ onionprobe_config_script_path }}"
         owner: "{{ owner }}"
@@ -58,7 +58,7 @@
         mode: '0755'
         state: directory
 
-    - name: Copy custom config generation script
+    - name: configuration | onionprobe | Copy custom config generation script
       ansible.builtin.copy:
         src: "{{ onionprobe_config_script_src }}"
         dest: "{{ onionprobe_config_script_path }}"
@@ -66,25 +66,25 @@
         group: "{{ group }}"
         mode: '0755'
 
-    - name: Runs configuration script as root when not in standalone mode
+    - name: configuration | onionprobe | Runs configuration script as root when not in standalone mode
       when: onionprobe_operation != 'standalone' and owner == 'root'
       ansible.builtin.command:
-        cmd: "{{ onionprobe_config_script_path}}/{{ onionprobe_config_script_src | basename }} {{ onionprobe_config_script_params }}"
+        cmd: "{{ onionprobe_config_script_path }}/{{ onionprobe_config_script_src | basename }} {{ onionprobe_config_script_params }}"
         chdir: "{{ onionprobe_configpath }}"
       notify: Restart the Onionprobe service
 
-    - name: Runs configuration script as root when not in standalone mode
+    - name: configuration | onionprobe | Runs configuration script as root when not in standalone mode
       when: onionprobe_operation != 'standalone' and owner != 'root'
       ansible.builtin.command:
-        cmd: "{{ onionprobe_config_script_path}}/{{ onionprobe_config_script_src | basename }} {{ onionprobe_config_script_params }}"
+        cmd: "{{ onionprobe_config_script_path }}/{{ onionprobe_config_script_src | basename }} {{ onionprobe_config_script_params }}"
         chdir: "{{ onionprobe_configpath }}"
-        become: yes
+        become: true
         become_user: "{{ owner }}"
       notify: Restart the Onionprobe service
 
-- name: Manages Onionprobe configuration file
+- name: configuration | onionprobe | Manages Onionprobe configuration file
   block:
-    - name: Copy configuration script file
+    - name: configuration | onionprobe | Copy configuration script file
       when: onionprobe_config_src != ''
       ansible.builtin.copy:
         src: "{{ onionprobe_config_src }}"

@@ -6,7 +6,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-- name: Manage group and user
+- name: environment | user | Manage group and user
   block:
     # Installing acl package is needed so become_user works correctly.
     #
@@ -24,22 +24,22 @@
     # * https://docs.ansible.com/ansible-core/2.14/playbook_guide/playbooks_privilege_escalation.html#risks-and-limitations-of-become
     # * https://stackoverflow.com/questions/46352173/ansible-failed-to-set-permissions-on-the-temporary#56379678
     # * https://github.com/ansible/ansible/issues/74830
-    - name: Install acl
+    - name: environment | user | Install acl
       ansible.builtin.package:
-        name: acl
+        name: environment | user | acl
 
-    - name: Manage the onionprobe group
+    - name: environment | user | Manage the onionprobe group
       ansible.builtin.group:
-        name: "{{ onionprobe_group }}"
+        name: environment | user | "{{ onionprobe_group }}"
         gid: "{{ onionprobe_gid }}"
 
-    - name: Manage the onionprobe user
+    - name: environment | user | Manage the onionprobe user
       ansible.builtin.user:
-        name: "{{ onionprobe_user }}"
-        append: yes
+        name: environment | user | "{{ onionprobe_user }}"
+        append: true
         uid: "{{ onionprobe_uid }}"
         group: "{{ onionprobe_group }}"
-        groups: "{{ [ 'docker' ] if (onionprobe_container_runtime == 'docker' and onionprobe_operation == 'monitor') else [] }}"
-        create_home: no
+        groups: "{{ ['docker'] if (onionprobe_container_runtime == 'docker' and onionprobe_operation == 'monitor') else [] }}"
+        create_home: true
         home: "{{ onionprobe_path }}"
         password_lock: true

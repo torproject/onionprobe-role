@@ -27,7 +27,7 @@
 
   pre_tasks:
     - name: Run pre-tasks
-      include_tasks: tasks.yml
+      ansible.builtin.include_tasks: tasks.yml
 
   roles:
     - onionprobe
@@ -50,7 +50,7 @@
 
   pre_tasks:
     - name: Run pre-tasks
-      include_tasks: tasks.yml
+      ansible.builtin.include_tasks: tasks.yml
 
   roles:
     - onionprobe
@@ -73,7 +73,7 @@
 
   pre_tasks:
     - name: Run pre-tasks
-      include_tasks: tasks.yml
+      ansible.builtin.include_tasks: tasks.yml
 
   roles:
     - onionprobe
@@ -96,7 +96,7 @@
 
   pre_tasks:
     - name: Run pre-tasks
-      include_tasks: tasks.yml
+      ansible.builtin.include_tasks: tasks.yml
 
   roles:
     - onionprobe

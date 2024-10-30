@@ -6,8 +6,8 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-- name: Installs Onionprobe from the distro package
+- name: installation | distro | Installs Onionprobe from the distro package
   block:
-    - name: Install onionprobe package
+    - name: installation | distro | Install onionprobe package
       ansible.builtin.package:
-        name: onionprobe
+        name: installation | distro | onionprobe

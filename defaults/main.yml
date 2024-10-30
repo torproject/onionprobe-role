@@ -185,7 +185,13 @@ onionprobe_container_runtime: 'docker'
 #
 # Example:
 #
-#   onionprobe_configurator_params: --loop --wait 3600 --config_overrides rounds=20 descriptor_max_retries=20 descriptor_timeout=120 http_connect_timeout=120 http_connect_max_retries=6 http_read_timeout=120 --output_folder /srv/onionprobe/contrib/configs --config_template /srv/onionprobe/configs/tor.yaml
+#   onionprobe_configurator_params: >
+#     --loop --wait 3600
+#     --output_folder /srv/onionprobe/contrib/configs
+#     --config_template /srv/onionprobe/configs/tor.yaml
+#     --config_overrides rounds=20 descriptor_max_retries=20
+#     descriptor_timeout=120 http_connect_timeout=120
+#     http_connect_max_retries=6 http_read_timeout=120
 #
 # For the standalone operation mode, it's recommended to set "--wait" and
 # "rounds=" params, so the configuration container stops periodically, ensuring

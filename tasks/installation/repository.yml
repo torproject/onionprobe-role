@@ -6,19 +6,19 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-- name: Install Onionprobe dependencies
+- name: installation | repository | Install Onionprobe dependencies
   block:
-    - name: Check if this Ansible role can install packages for this distro
+    - name: installation | repository | Check if this Ansible role can install packages for this distro
       when: ansible_os_family != 'Debian'
-      debug:
+      ansible.builtin.debug:
         msg:
           - "The Onionprobe Ansible role currently does not handle dependencies on {{ ansible_distribution }}."
           - "Please manage them manually, or create a merge request."
 
-    - name: Install Onionprobe dependencies on Debian-like systems
+    - name: installation | repository | Install Onionprobe dependencies on Debian-like systems
       when: ansible_os_family == 'Debian'
       ansible.builtin.apt:
-        name:
+        name: installation | repository |
           - git
           - ca-certificates
           - python3-prometheus-client
@@ -30,15 +30,15 @@
           - python3-requests
           - python3-socks
 
-- name: Manage group and user
-  include_tasks: ../resources/environment/user.yml
+- name: installation | repository | Manage group and user
+  ansible.builtin.include_tasks: ../resources/environment/user.yml
 
-- name: Manage repository
+- name: installation | repository | Manage repository
   block:
     # Note that Git is able to clone to an empty folder, so there's no harm
     # in creating this folder in the first run when the repository is still not
     # cloned.
-    - name: Manage the folder
+    - name: installation | repository | Manage the folder
       ansible.builtin.file:
         path: "{{ onionprobe_path }}"
         owner: "{{ onionprobe_user }}"
@@ -51,17 +51,17 @@
 
     # Useful in case something is already there and with other ownership, such as
     # alertmanager's configuration
-    - name: Manage the onionprobe repository permission
+    - name: installation | repository | Manage the onionprobe repository permission
       ansible.builtin.file:
         path: "{{ onionprobe_path }}"
         state: directory
         owner: "{{ onionprobe_user }}"
         group: "{{ onionprobe_user }}"
-        recurse: no
+        recurse: false
 
-    - name: Manage the onionprobe Git repository
+    - name: installation | repository | Manage the onionprobe Git repository
       ansible.builtin.git:
         repo: "{{ onionprobe_repo }}"
         dest: "{{ onionprobe_path }}"
-      become: yes
+      become: true
       become_user: "{{ onionprobe_user }}"

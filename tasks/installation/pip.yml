@@ -6,18 +6,18 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-- name: Installs Onionprobe using pip
+- name: installation | pip | Installs Onionprobe using pip
   block:
-    - name: Install ansible.builtin.pip dependencies on Debian-like systems
+    - name: installation | pip | Install ansible.builtin.pip dependencies on Debian-like systems
       when: ansible_os_family == 'Debian'
       ansible.builtin.apt:
-        name:
+        name: installation | pip |
           - python3-pip
           - python3-virtualenv
         state: present
 
-    - name: Install onionprobe package
+    - name: installation | pip | Install onionprobe package
       ansible.builtin.pip:
-        name: onionprobe
+        name: installation | pip | onionprobe
         extra_args: '--upgrade'
         virtualenv: "{{ onionprobe_virtualenv }}"
