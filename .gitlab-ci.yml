@@ -6,6 +6,22 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
+# Linting
+lint:
+  stage: test
+
+  image: debian:bookworm
+
+  before_script:
+    - apt-get update
+    - apt install -y python3-pip ansible
+    - python3 -m pip install ansible-lint --break-system-packages
+    - ansible --version
+    - ansible-lint --version
+
+  script:
+    - ansible-lint
+
 # Podman CI workflow
 molecule_podman:
   stage: test
