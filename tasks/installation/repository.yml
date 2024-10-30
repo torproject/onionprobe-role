@@ -18,7 +18,7 @@
     - name: installation | repository | Install Onionprobe dependencies on Debian-like systems
       when: ansible_os_family == 'Debian'
       ansible.builtin.apt:
-        name: installation | repository |
+        name:
           - git
           - ca-certificates
           - python3-prometheus-client
