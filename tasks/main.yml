@@ -17,25 +17,25 @@
 #
 
 - name: Onionprobe installation using distro-supplied package
-  include_tasks: installation/distro.yml
   when: onionprobe_installation == 'package'
+  include_tasks: installation/distro.yml
 
 - name: Onionprobe installation using pip
-  include_tasks: installation/pip.yml
   when: onionprobe_installation == 'pip'
+  include_tasks: installation/pip.yml
 
 - name: Onionprobe installation using a repository working copy
-  include_tasks: installation/repository.yml
   when: onionprobe_installation == 'repository'
+  include_tasks: installation/repository.yml
 
 #
 # Operation
 #
 
 - name: Onionprobe single service
-  include_tasks: operation/single.yml
   when: onionprobe_operation == 'single'
+  include_tasks: operation/single.yml
 
 - name: Onionprobe full standalone monitor node
-  include_tasks: operation/standalone.yml
   when: onionprobe_operation == 'standalone'
+  include_tasks: operation/standalone.yml

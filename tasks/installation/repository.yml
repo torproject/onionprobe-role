@@ -9,13 +9,14 @@
 - name: Install Onionprobe dependencies
   block:
     - name: Check if this Ansible role can install packages for this distro
+      when: ansible_os_family != 'Debian'
       debug:
         msg:
           - "The Onionprobe Ansible role currently does not handle dependencies on {{ ansible_distribution }}."
           - "Please manage them manually, or create a merge request."
-      when: ansible_os_family != 'Debian'
 
     - name: Install Onionprobe dependencies on Debian-like systems
+      when: ansible_os_family == 'Debian'
       ansible.builtin.apt:
         name:
           - git
@@ -28,7 +29,6 @@
           - python3-pytest
           - python3-requests
           - python3-socks
-      when: ansible_os_family == 'Debian'
 
 - name: Manage group and user
   include_tasks: ../resources/environment/user.yml

@@ -16,15 +16,16 @@
     force: yes
 
 - name: Create the podman config folder for the monitor user
+  when: onionprobe_container_runtime == 'podman'
   ansible.builtin.file:
     path: "{{ onionprobe_path }}/.config/containers/containers.conf.d"
     owner: "{{ onionprobe_user }}"
     group: "{{ onionprobe_user }}"
     state: directory
     mode: '0755'
-  when: onionprobe_container_runtime == 'podman'
 
 - name: Configure podman's containers.conf for the monitor user
+  when: onionprobe_container_runtime == 'podman'
   ansible.builtin.copy:
     remote_src: true
     src: "{{ onionprobe_path }}/configs/podman/containers.conf"
@@ -32,4 +33,3 @@
     owner: root
     group: root
     mode: '0644'
-  when: onionprobe_container_runtime == 'podman'
