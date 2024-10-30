@@ -7,7 +7,7 @@
 #
 
 - name: configuration | onionprobe | Handle Onionprobe config path
-  when: onionprobe_config_path == ''
+  when: onionprobe_config_path | length == 0
   block:
     - name: configuration | onionprobe | Set onionprobe_config_path for the distro installation method
       when: onionprobe_installation == 'distro'
@@ -30,7 +30,7 @@
         state: directory
 
 - name: configuration | onionprobe | Handle Onionprobe config script path
-  when: onionprobe_config_script_path == ''
+  when: onionprobe_config_script_path | length == 0
   block:
     - name: configuration | onionprobe | Set onionprobe_config_script_path for the distro installation method
       when: onionprobe_installation == 'distro'
@@ -48,7 +48,7 @@
         onionprobe_config_script_path: "{{ onionprobe_path }}/packages"
 
 - name: configuration | onionprobe | Manage the config generation script
-  when: onionprobe_config_script_src != ''
+  when: onionprobe_config_script_src | length != 0
   block:
     - name: configuration | onionprobe | Manage the config generation script path
       ansible.builtin.file:
@@ -73,7 +73,7 @@
         chdir: "{{ onionprobe_configpath }}"
       notify: Restart the Onionprobe service
 
-    - name: configuration | onionprobe | Runs configuration script as root when not in standalone mode
+    - name: configuration | onionprobe | Runs configuration script as the onionprobe user when not in standalone mode
       when: onionprobe_operation != 'standalone' and owner != 'root'
       ansible.builtin.command:
         cmd: "{{ onionprobe_config_script_path }}/{{ onionprobe_config_script_src | basename }} {{ onionprobe_config_script_params }}"
@@ -85,7 +85,7 @@
 - name: configuration | onionprobe | Manages Onionprobe configuration file
   block:
     - name: configuration | onionprobe | Copy configuration script file
-      when: onionprobe_config_src != ''
+      when: onionprobe_config_src | length != 0
       ansible.builtin.copy:
         src: "{{ onionprobe_config_src }}"
         dest: "{{ onionprobe_path }}/{{ onionprobe_config }}"
