@@ -80,7 +80,9 @@
       changed_when: true
       #notify: Restart the Onionprobe service
 
-    - name: configuration | onionprobe | Runs configuration script as the onionprobe user when not in standalone mode
+    # Tagging with 'noaq: inline-env-var' as this seems to be triggering a false positive with ansible-lint
+    # https://ansible.readthedocs.io/projects/lint/rules/inline-env-var/
+    - name: configuration | onionprobe | Runs configuration script as the onionprobe user when not in standalone mode # noqa: inline-env-var
       when: onionprobe_operation != 'standalone' and owner != 'root'
       ansible.builtin.command:
         cmd: "{{ onionprobe_config_script_path }}/{{ onionprobe_config_script_src | basename }} {{ onionprobe_config_script_params }}"
