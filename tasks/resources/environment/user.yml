@@ -26,16 +26,16 @@
     # * https://github.com/ansible/ansible/issues/74830
     - name: environment | user | Install acl
       ansible.builtin.package:
-        name: environment | user | acl
+        name: acl
 
     - name: environment | user | Manage the onionprobe group
       ansible.builtin.group:
-        name: environment | user | "{{ onionprobe_group }}"
+        name: "{{ onionprobe_group }}"
         gid: "{{ onionprobe_gid }}"
 
     - name: environment | user | Manage the onionprobe user
       ansible.builtin.user:
-        name: environment | user | "{{ onionprobe_user }}"
+        name: "{{ onionprobe_user }}"
         append: true
         uid: "{{ onionprobe_uid }}"
         group: "{{ onionprobe_group }}"
