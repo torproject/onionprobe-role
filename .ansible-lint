@@ -27,6 +27,7 @@ loop_var_prefix: "^(__|{role}_)"
 # to skip_list.
 var_naming_pattern: "^[a-z_][a-z0-9_]*$"
 
+# Use default rules
 use_default_rules: true
 
 # Ansible-lint is able to recognize and load skip rules stored inside
