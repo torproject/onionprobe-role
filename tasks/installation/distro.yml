@@ -8,6 +8,6 @@
 
 - name: Installs Onionprobe from the distro package
   block:
-  - name: Install onionprobe package
-    ansible.builtin.package:
-      name: onionprobe
+    - name: Install onionprobe package
+      ansible.builtin.package:
+        name: onionprobe

@@ -26,10 +26,10 @@
 
 - name: Ensure the Onionprobe service is running
   block:
-  - name: Enable the systemd service for the monitoring node
-    when: onionprobe_enable_service is true
-    ansible.builtin.systemd:
-      name: "{{ onionprobe_service }}"
-      enabled: yes
-      daemon_reload: yes
-      state: started
+    - name: Enable the systemd service for the monitoring node
+      when: onionprobe_enable_service is true
+      ansible.builtin.systemd:
+        name: "{{ onionprobe_service }}"
+        enabled: yes
+        daemon_reload: yes
+        state: started

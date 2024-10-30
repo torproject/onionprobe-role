@@ -9,50 +9,50 @@
 - name: Onionprobe service configuration when installed from pip
   when: onionprobe_installation == 'pip'
   block:
-  - name: Manage group and user
-    include_tasks: ../resources/environment/user.yml
+    - name: Manage group and user
+      include_tasks: ../resources/environment/user.yml
 
-  - name: Manage the configuration file
-    include_tasks: ../resources/configuration/onionprobe.yml
-    vars:
-      owner: "{{ onionprobe_user }}"
-      group: "{{ onionprobe_group }}"
+    - name: Manage the configuration file
+      include_tasks: ../resources/configuration/onionprobe.yml
+      vars:
+        owner: "{{ onionprobe_user }}"
+        group: "{{ onionprobe_group }}"
 
-  - name: Manage the service environment file
-    include_tasks: ../resources/service/systemd/environment.yml
-    vars:
-      destination: "{{ onionprobe_path }}/systemd.conf"
-      owner: "{{ onionprobe_user }}"
-      group: "{{ onionprobe_group }}"
+    - name: Manage the service environment file
+      include_tasks: ../resources/service/systemd/environment.yml
+      vars:
+        destination: "{{ onionprobe_path }}/systemd.conf"
+        owner: "{{ onionprobe_user }}"
+        group: "{{ onionprobe_group }}"
 
 - name: Onionprobe service configuration when installed from repository
   when: onionprobe_installation == 'repository'
   block:
-  - name: Manage group and user
-    include_tasks: ../resources/environment/user.yml
+    - name: Manage group and user
+      include_tasks: ../resources/environment/user.yml
 
-  - name: Manage the configuration file
-    include_tasks: ../resources/configuration/onionprobe.yml
-    vars:
-      owner: "{{ onionprobe_user }}"
-      group: "{{ onionprobe_group }}"
+    - name: Manage the configuration file
+      include_tasks: ../resources/configuration/onionprobe.yml
+      vars:
+        owner: "{{ onionprobe_user }}"
+        group: "{{ onionprobe_group }}"
 
-  - name: Manage the service environment file
-    include_tasks: ../resources/service/systemd/environment.yml
-    vars:
-      destination: "{{ onionprobe_path }}/contrib/systemd.conf"
-      owner: "{{ onionprobe_user }}"
-      group: "{{ onionprobe_group }}"
+    - name: Manage the service environment file
+      include_tasks: ../resources/service/systemd/environment.yml
+      vars:
+        destination: "{{ onionprobe_path }}/contrib/systemd.conf"
+        owner: "{{ onionprobe_user }}"
+        group: "{{ onionprobe_group }}"
 
 - name: Onionprobe service configuration when installed from distro
   when: onionprobe_installation == 'distro'
   block:
-  - name: Manage the service environment file
-    include_tasks: ../resources/service/systemd/environment.yml
-    vars:
-      destination: "/etc/default/onionprobe"
-      owner: root
-      group: root
+    - name: Manage the service environment file
+      include_tasks: ../resources/service/systemd/environment.yml
+      vars:
+        destination: "/etc/default/onionprobe"
+        owner: root
+        group: root
 
 - name: Manage Onionprobe's Systemd service
   include_tasks: ../resources/service/systemd/unit.yml
