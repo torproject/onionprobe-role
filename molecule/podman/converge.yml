@@ -14,7 +14,7 @@
 
   vars:
     # Test the monitoring mode
-    onionprobe_operation: monitor
+    onionprobe_operation: standalone
 
     # Install via repository
     onionprobe_installation: repository

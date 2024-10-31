@@ -60,7 +60,7 @@ onionprobe_installation: repository
 #               * Systemd must be available in the system, and is used to
 #                 manage the service.
 #
-onionprobe_operation: monitor
+onionprobe_operation: standalone
 
 # Onionprobe Project name
 #
