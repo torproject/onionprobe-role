@@ -40,6 +40,6 @@
         uid: "{{ onionprobe_uid }}"
         group: "{{ onionprobe_group }}"
         groups: "{{ ['docker'] if (onionprobe_container_runtime == 'docker' and onionprobe_operation == 'monitor') else [] }}"
-        create_home: true
+        create_home: false
         home: "{{ onionprobe_path }}"
         password_lock: true

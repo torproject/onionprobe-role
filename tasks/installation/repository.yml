@@ -38,6 +38,10 @@
     # Note that Git is able to clone to an empty folder, so there's no harm
     # in creating this folder in the first run when the repository is still not
     # cloned.
+    #
+    # This folder needs to be managed beforehand, to make sure the Onionprobe
+    # user can write in to it in cases it's located in systemd-wide folders
+    # like /var/lib.
     - name: installation | repository | Manage the Onionprobe folder
       ansible.builtin.file:
         path: "{{ onionprobe_path }}"
