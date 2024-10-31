@@ -19,6 +19,7 @@ lint:
     - ansible --version
     - ansible-lint --version
     - mkdir -p molecule/podman/roles && ln -s ../../.. molecule/podman/roles/onionprobe
+    - mkdir -p molecule/local/roles  && ln -s ../../.. molecule/local/roles/onionprobe
 
   script:
     - ansible-lint
