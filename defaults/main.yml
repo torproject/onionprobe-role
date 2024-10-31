@@ -23,7 +23,7 @@
 #
 # 'pip'       : installs Onionprobe and it's dependencies using pip.
 #
-#               Requirements:
+#               Requirements (automatically handled on Debian-like systems):
 #
 #               * Pip.
 #
@@ -57,7 +57,7 @@ onionprobe_installation: repository
 #               * Docker Compose or Podman Compose must be installed and
 #                 configured.
 #
-#               * Systemd must be available in the system, and is used to
+#               * Systemd must be available in the system, as it's used to
 #                 manage the service.
 #
 onionprobe_operation: standalone
