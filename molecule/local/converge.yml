@@ -1,0 +1,54 @@
+---
+- name: Converge
+  hosts: all
+
+  # Ensure Ansible become root when running on localhost
+  become: true
+  become_method: community.general.sudosu
+
+  # Gathering facts requires a container with Python installed
+  gather_facts: true
+
+  vars:
+    # Test the monitoring mode
+    onionprobe_operation: standalone
+
+    # Install via repository
+    onionprobe_installation: repository
+
+    # Configure Podman as the container runtime
+    onionprobe_container_runtime: podman
+
+    # Do not enable the service, since the image is not started with systemd as PID 1
+    onionprobe_enable_service: true
+
+  pre_tasks:
+    # Install the ACL package
+    # https://stackoverflow.com/questions/46352173/ansible-failed-to-set-permissions-on-the-temporary#56379678
+    - name: Install acl
+      ansible.builtin.package:
+        name: acl
+
+    # Sudo is needed by some Ansible modules, and may not be available in the
+    # container instance
+    - name: Install sudo
+      ansible.builtin.package:
+        name: sudo
+
+    - name: Create the admin group
+      ansible.builtin.group:
+        name: "admin"
+
+    # Users in admin group should have passwordless sudo
+    # This ensures the Onionspray build script runs
+    - name: Configure passwordless sudo for the admin group
+      ansible.builtin.lineinfile:
+        create: true
+        owner: "root"
+        group: "root"
+        mode: "0600"
+        line: "%admin ALL=(ALL) NOPASSWD:ALL"
+        path: /etc/sudoers.d/90-admin
+
+  roles:
+    - onionprobe
