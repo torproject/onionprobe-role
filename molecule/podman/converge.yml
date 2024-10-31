@@ -20,7 +20,8 @@
     onionprobe_installation: repository
 
     # Configure Podman as the container runtime
-    onionprobe_container_runtime: podman
+    # This is still experimental as of 2024-10
+    #onionprobe_container_runtime: podman
 
     # Do not enable the service, since the image is not started with systemd as PID 1
     onionprobe_enable_service: false

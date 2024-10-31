@@ -37,7 +37,8 @@ Merge requests are welcome to cover more Operating Systems.
 * The requirements to run [ansible.builtin.pip][] if installing Onionprobe [from PyPI][].
 * For the [standalone][] operation mode:
   * [Docker][] and [Docker Compose][], or [Podman][] and [Podman Compose][] should be
-    available in the remote system.
+    available in the remote system. As of 2024-10, [Podman][] support is still
+    experimental.
 
 [Systemd]: https://systemd.io
 [ansible.builin.pip]: https://docs.ansible.com/ansible/latest/collections/ansible/builtin/pip_module.html
