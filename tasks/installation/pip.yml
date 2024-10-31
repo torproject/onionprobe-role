@@ -25,5 +25,5 @@
 
     - name: installation | pip | Install Tor
       ansible.builtin.package:
-        tor
-      state: present
+        name: tor
+        state: present
