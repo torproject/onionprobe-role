@@ -18,11 +18,10 @@
         recurse : false
 
     - name: configuration | alertmanager | Setup the altertmanager contrib config
-      # Ownership here depends on the UID and GID used by the Alertmanager container service
       ansible.builtin.template:
         src   : "{{ onionprobe_alertmanager_template }}"
         dest  : "{{ onionprobe_path }}/contrib/configs/alertmanager/alertmanager.yml"
-        owner : "nobody"
-        group : "nogroup"
+        owner : "{{ onionprobe_alertmanager_user }}"
+        group : "{{ onionprobe_alertmanager_group }}"
         mode  : '0640'
         force : true

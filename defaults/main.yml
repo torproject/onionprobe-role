@@ -224,6 +224,16 @@ onionprobe_smtp_username                        : changeme
 onionprobe_smtp_auth_password                   : changeme
 onionprobe_altermanager_default_recipient_email : changeme@example.org
 
+# Sets the Alertmanager configuration ownership
+#
+# This depends on the UID and GID used by the Alertmanager container service:
+# https://github.com/prometheus/alertmanager/blob/main/Dockerfile
+#
+# It may or may not match the default nobody/nogroup from your operating system.
+# The default may for for most cases.
+onionprobe_alertmanager_user : nobody
+onionprobe_alertmanager_group: nogroup
+
 # Grafana configuration
 onionprobe_grafana_database_password: unsafe-password-please-change
 
