@@ -4,7 +4,7 @@
 driver:
   name: default
   options:
-    managed: False
+    managed: false
     ansible_connection_options:
       ansible_connection: local
 
