@@ -36,4 +36,4 @@
     - name: deps | Create the docker group
       when: onionprobe_container_runtime == 'docker'
       ansible.builtin.group:
-        name : "{{ docker }}"
+        name : docker
