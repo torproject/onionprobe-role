@@ -19,6 +19,6 @@
 
     - name: installation | pip | Install onionprobe package
       ansible.builtin.pip:
-        name: installation | pip | onionprobe
+        name: onionprobe
         extra_args: '--upgrade'
         virtualenv: "{{ onionprobe_virtualenv }}"
