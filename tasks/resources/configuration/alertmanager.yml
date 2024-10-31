@@ -12,7 +12,7 @@
       ansible.builtin.file:
         path    : "{{ onionprobe_path }}/contrib/configs/alertmanager"
         owner   : "{{ onionprobe_user }}"
-        group   : "{{ onionprobe_user }}"
+        group   : "{{ onionprobe_group }}"
         mode    : '0755'
         state   : directory
         recurse : false

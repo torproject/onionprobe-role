@@ -11,7 +11,7 @@
     src   : containers/env.j2
     dest  : "{{ onionprobe_path }}/.env"
     owner : "{{ onionprobe_user }}"
-    group : "{{ onionprobe_user }}"
+    group : "{{ onionprobe_group }}"
     mode  : '0640'
     force : true
 
@@ -20,7 +20,7 @@
   ansible.builtin.file:
     path  : "{{ onionprobe_path }}/.config/containers/containers.conf.d"
     owner : "{{ onionprobe_user }}"
-    group : "{{ onionprobe_user }}"
+    group : "{{ onionprobe_group }}"
     state : directory
     mode  : '0755'
 
