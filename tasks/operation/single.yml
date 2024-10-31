@@ -25,6 +25,11 @@
         owner       : "{{ onionprobe_user }}"
         group       : "{{ onionprobe_group }}"
 
+    - name: operation | single | Manage Onionprobe's Systemd service
+      ansible.builtin.include_tasks: ../resources/service/systemd/unit.yml
+      vars:
+        env_file: "{{ onionprobe_path }}/systemd.conf"
+
 - name: operation | single | Onionprobe service configuration when installed from repository
   when: onionprobe_installation == 'repository'
   block:
@@ -44,6 +49,11 @@
         owner: "{{ onionprobe_user }}"
         group: "{{ onionprobe_group }}"
 
+    - name: operation | single | Manage Onionprobe's Systemd service
+      ansible.builtin.include_tasks: ../resources/service/systemd/unit.yml
+      vars:
+        env_file: "{{ onionprobe_path }}/contrib/systemd.conf"
+
 - name: operation | single | Onionprobe service configuration when installed from distro
   when: onionprobe_installation == 'distro'
   block:
@@ -54,5 +64,8 @@
         owner       : root
         group       : root
 
-- name: operation | single | Manage Onionprobe's Systemd service
-  ansible.builtin.include_tasks: ../resources/service/systemd/unit.yml
+    # Distros should take care of managing the Onionprobe Systemd Unit
+    #- name: operation | single | Manage Onionprobe's Systemd service
+    #  ansible.builtin.include_tasks: ../resources/service/systemd/unit.yml
+    #  vars:
+    #    env_file: "/etc/default/onionprobe"

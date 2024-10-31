@@ -11,8 +11,14 @@ Documentation=https://onionservices.torproject.org/apps/web/onionprobe
 After=network.target
 
 [Service]
-EnvironmentFile={{ onionprobe_path }}/onionprobe.conf
+EnvironmentFile={{ env_file }}
+{% if onionprobe_installation == 'pip' %}
 ExecStart={{ onionprobe_virtualenv }}/bin/onionprobe -c $CONFIG $DAEMON_OPTS
+{% elif onionprobe_installation == 'package' %}
+ExecStart=/usr/bin/onionprobe -c $CONFIG $DAEMON_OPTS
+{% else %}
+ExecStart={{ onionprobe_path }}/onionprobe -c $CONFIG $DAEMON_OPTS
+{% endif %}
 User={{ onionprobe_user }}
 Group={{ onionprobe_group }}
 CapabilityBoundingSet=
