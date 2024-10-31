@@ -11,7 +11,7 @@
     - name: installation | pip | Install ansible.builtin.pip dependencies on Debian-like systems
       when: ansible_os_family == 'Debian'
       ansible.builtin.apt:
-        name: installation | pip |
+        name:
           - python3-pip
           - python3-virtualenv
           - python3-setuptools
