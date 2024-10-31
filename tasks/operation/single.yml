@@ -21,9 +21,9 @@
     - name: operation | single | Manage the service environment file
       ansible.builtin.include_tasks: ../resources/service/systemd/environment.yml
       vars:
-        destination: "{{ onionprobe_path }}/systemd.conf"
-        owner: "{{ onionprobe_user }}"
-        group: "{{ onionprobe_group }}"
+        destination : "{{ onionprobe_path }}/systemd.conf"
+        owner       : "{{ onionprobe_user }}"
+        group       : "{{ onionprobe_group }}"
 
 - name: operation | single | Onionprobe service configuration when installed from repository
   when: onionprobe_installation == 'repository'
@@ -50,9 +50,9 @@
     - name: operation | single | Manage the service environment file
       ansible.builtin.include_tasks: ../resources/service/systemd/environment.yml
       vars:
-        destination: "/etc/default/onionprobe"
-        owner: root
-        group: root
+        destination : "/etc/default/onionprobe"
+        owner       : root
+        group       : root
 
 - name: operation | single | Manage Onionprobe's Systemd service
   ansible.builtin.include_tasks: ../resources/service/systemd/unit.yml

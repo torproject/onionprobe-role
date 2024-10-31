@@ -22,9 +22,9 @@ driver:
 platforms:
   - name: standalone
     # Use a container with Python pre-installed
-    image: docker.io/python:bookworm
-    pre_build_image: true
-    privileged: true
+    image           : docker.io/python : bookworm
+    pre_build_image : true
+    privileged      : true
 
     # Container entrypoint
     # A command that keeps the container running
@@ -32,9 +32,9 @@ platforms:
 
   - name: single-distro
     # Use a container with Python pre-installed
-    image: docker.io/python:bookworm
-    pre_build_image: true
-    privileged: true
+    image           : docker.io/python : bookworm
+    pre_build_image : true
+    privileged      : true
 
     # Container entrypoint
     # A command that keeps the container running
@@ -42,9 +42,9 @@ platforms:
 
   - name: single-pip
     # Use a container with Python pre-installed
-    image: docker.io/python:bookworm
-    pre_build_image: true
-    privileged: true
+    image           : docker.io/python : bookworm
+    pre_build_image : true
+    privileged      : true
 
     # Container entrypoint
     # A command that keeps the container running
@@ -52,9 +52,9 @@ platforms:
 
   - name: single-repository
     # Use a container with Python pre-installed
-    image: docker.io/python:bookworm
-    pre_build_image: true
-    privileged: true
+    image           : docker.io/python : bookworm
+    pre_build_image : true
+    privileged      : true
 
     # Container entrypoint
     # A command that keeps the container running

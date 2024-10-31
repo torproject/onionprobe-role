@@ -43,12 +43,12 @@
     # This ensures the Onionspray build script runs
     - name: Configure passwordless sudo for the admin group
       ansible.builtin.lineinfile:
-        create: true
-        owner: "root"
-        group: "root"
-        mode: "0600"
-        line: "%admin ALL=(ALL) NOPASSWD:ALL"
-        path: /etc/sudoers.d/90-admin
+        create : true
+        owner  : "root"
+        group  : "root"
+        mode   : "0600"
+        line   : "%admin ALL=(ALL) NOPASSWD : ALL"
+        path   : /etc/sudoers.d/90-admin
 
   roles:
     - onionprobe

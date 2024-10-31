@@ -44,19 +44,19 @@
     # like /var/lib.
     - name: installation | repository | Manage the Onionprobe folder
       ansible.builtin.file:
-        path: "{{ onionprobe_path }}"
-        owner: "{{ onionprobe_user }}"
-        group: "{{ onionprobe_group }}"
-        state: directory
+        path  : "{{ onionprobe_path }}"
+        owner : "{{ onionprobe_user }}"
+        group : "{{ onionprobe_group }}"
+        state : directory
         # We _could_ set the mode to 0750, but then we would have trouble sharing
         # this folder with containers
-        mode: '0755'
-        recurse: false
+        mode    : '0755'
+        recurse : false
 
     - name: installation | repository | Manage the onionprobe Git repository
       ansible.builtin.git:
-        repo: "{{ onionprobe_repo }}"
-        dest: "{{ onionprobe_path }}"
-        version: "{{ onionprobe_repository_version }}"
-      become: true
-      become_user: "{{ onionprobe_user }}"
+        repo    : "{{ onionprobe_repo }}"
+        dest    : "{{ onionprobe_path }}"
+        version : "{{ onionprobe_repository_version }}"
+      become      : true
+      become_user : "{{ onionprobe_user }}"

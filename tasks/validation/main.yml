@@ -10,18 +10,18 @@
   block:
     - name: validation | main | Checks that the monitor mode can only be used with the repository installation method
       ansible.builtin.assert:
-        quiet: true
-        that:
+        quiet : true
+        that  :
           - "onionprobe_operation != 'monitor' or (onionprobe_operation == 'monitor' and onionprobe_installation == 'repository')"
 
     - name: validation | main | Checks that the configuration file is set
       ansible.builtin.assert:
-        quiet: true
-        that:
+        quiet : true
+        that  :
           - "onionprobe_config != ''"
 
     - name: validation | main | Ensure onionprobe_config_src and onionprobe_config_script_src are not simultaneously set
       ansible.builtin.assert:
-        quiet: true
-        that:
+        quiet : true
+        that  :
           - "onionprobe_config_src == '' or onionprobe_config_script_src == ''"

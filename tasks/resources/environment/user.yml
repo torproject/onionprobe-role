@@ -30,16 +30,16 @@
 
     - name: environment | user | Manage the onionprobe group
       ansible.builtin.group:
-        name: "{{ onionprobe_group }}"
-        gid: "{{ onionprobe_gid }}"
+        name : "{{ onionprobe_group }}"
+        gid  : "{{ onionprobe_gid }}"
 
     - name: environment | user | Manage the onionprobe user
       ansible.builtin.user:
-        name: "{{ onionprobe_user }}"
-        append: true
-        uid: "{{ onionprobe_uid }}"
-        group: "{{ onionprobe_group }}"
-        groups: "{{ ['docker'] if (onionprobe_container_runtime == 'docker' and onionprobe_operation == 'monitor') else [] }}"
-        create_home: false
-        home: "{{ onionprobe_path }}"
-        password_lock: true
+        name          : "{{ onionprobe_user }}"
+        append        : true
+        uid           : "{{ onionprobe_uid }}"
+        group         : "{{ onionprobe_group }}"
+        groups        : "{{ ['docker'] if (onionprobe_container_runtime == 'docker' and onionprobe_operation == 'monitor') else [] }}"
+        create_home   : false
+        home          : "{{ onionprobe_path }}"
+        password_lock : true
