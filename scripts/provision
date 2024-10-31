@@ -25,8 +25,10 @@ $SUDO apt-get upgrade -y
 $SUDO apt install -y $DEPENDENCIES_APT
 $SUDO python3 -m pip install $DEPENDENCIES_PIP --break-system-packages
 
-# Create a symlink so molecule can find the role
-if [ ! -e "$BASEPATH/molecule/podman/roles/onionprobe"]; then
-  mkdir -p $BASEPATH/molecule/podman/roles && \
-    ln -sf ../../.. $BASEPATH/molecule/podman/roles/onionprobe
-fi
+# Create a symlink so molecule and ansible-lint can find the role
+for scenario in podman local; do
+  if [ ! -e "$BASEPATH/molecule/$scenario/roles/onionprobe" ]; then
+    mkdir -p $BASEPATH/molecule/$scenario/roles && \
+      ln -sf ../../.. $BASEPATH/molecule/$scenario/roles/onionprobe
+  fi
+done
