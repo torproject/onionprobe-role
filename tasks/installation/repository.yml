@@ -29,6 +29,7 @@
           - python3-pytest
           - python3-requests
           - python3-socks
+          - tor
 
 - name: installation | repository | Manage group and user
   ansible.builtin.include_tasks: ../resources/environment/user.yml
