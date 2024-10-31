@@ -16,7 +16,7 @@
   ansible.builtin.include_tasks: ../resources/configuration/alertmanager.yml
 
 - name: operation | standalone | Container configuration
-  ansible.builtin.include_tasks: ../resources/configuration/container.yml
+  ansible.builtin.include_tasks: ../resources/configuration/containers.yml
 
 - name: operation | standalone | Service configuration
   ansible.builtin.include_tasks: ../resources/service/systemd/unit.yml

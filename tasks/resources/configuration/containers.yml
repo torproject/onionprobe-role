@@ -6,16 +6,16 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-- name: configuration | container | Setup the container environment file
+- name: configuration | containers | Setup the container environment file
   ansible.builtin.template:
-    src: docker-compose/env.j2
+    src: containers/env.j2
     dest: "{{ onionprobe_path }}/.env"
     owner: "{{ onionprobe_user }}"
     group: "{{ onionprobe_user }}"
     mode: '0640'
     force: true
 
-- name: configuration | container | Create the podman config folder for the monitor user
+- name: configuration | containers | Create the podman config folder for the monitor user
   when: onionprobe_container_runtime == 'podman'
   ansible.builtin.file:
     path: "{{ onionprobe_path }}/.config/containers/containers.conf.d"
@@ -24,7 +24,7 @@
     state: directory
     mode: '0755'
 
-- name: configuration | container | Configure podman's containers.conf for the monitor user
+- name: configuration | containers | Configure podman's containers.conf for the monitor user
   when: onionprobe_container_runtime == 'podman'
   ansible.builtin.copy:
     remote_src: true

@@ -29,7 +29,7 @@
     - name: systemd | unit | Enable the systemd service for the monitoring node
       when: onionprobe_enable_service is true
       ansible.builtin.systemd:
-        name: systemd | unit | "{{ onionprobe_service }}"
+        name: "{{ onionprobe_service }}"
         enabled: true
         daemon_reload: true
         state: started

@@ -1,2 +1,3 @@
 __pycache__
 molecule/podman/roles
+molecule/local/roles

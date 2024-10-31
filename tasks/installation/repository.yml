@@ -8,7 +8,7 @@
 
 - name: installation | repository | Install Onionprobe dependencies
   block:
-    - name: installation | repository | Check if this Ansible role can install packages for this distro
+    - name: installation | repository | Check if this Ansible role can install packages in this distro
       when: ansible_os_family != 'Debian'
       ansible.builtin.debug:
         msg:
