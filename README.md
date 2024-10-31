@@ -71,7 +71,7 @@ Sample usage in an Ansible playbook:
 
   vars:
     onionprobe_installation: repository
-    onionprobe_operation: monitor
+    onionprobe_operation: standalone
 
 ```
 
