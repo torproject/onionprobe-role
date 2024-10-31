@@ -224,7 +224,7 @@ onionprobe_smtp_username                        : changeme
 onionprobe_smtp_auth_password                   : changeme
 onionprobe_altermanager_default_recipient_email : changeme@example.org
 
-# Sets the Alertmanager configuration ownership for the standalone monitor mode
+# Sets the Alertmanager group ownership for the standalone monitor mode
 #
 # This depends on the UID and GID used by the Alertmanager container service:
 # https://github.com/prometheus/alertmanager/blob/main/Dockerfile
@@ -233,7 +233,6 @@ onionprobe_altermanager_default_recipient_email : changeme@example.org
 #
 # The default may for for most cases, so only customize these variables if you're
 # having issues with the alertmanager container.
-onionprobe_alertmanager_user : nobody
 onionprobe_alertmanager_group: nogroup
 
 # Grafana configuration

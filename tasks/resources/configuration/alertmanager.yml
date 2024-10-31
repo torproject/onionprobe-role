@@ -23,7 +23,6 @@
         dest  : "{{ onionprobe_path }}/contrib/configs/alertmanager/alertmanager.yml"
         # Ownership and group here should work both for the Onionprobe user
         # and the Alertmanager container user
-        #owner: "{{ onionprobe_alertmanager_user }}"
         owner : "{{ onionprobe_user }}"
         group : "{{ onionprobe_alertmanager_group }}"
         mode  : '0640'
