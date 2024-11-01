@@ -30,15 +30,30 @@
         state : directory
         mode  : '0755'
 
-# Creates the file if absent with the right set of permissions
-# Or fixes the permissions for an existing file
-# This may avoid race conditions
-- name: configuration | onionprobe | Set Onionprobe configuration file permissions
-  ansible.builtin.file:
-    name  : "{{ onionprobe_config_path }}/{{ onionprobe_config }}"
-    owner : "{{ owner }}"
-    group : "{{ group }}"
-    mode  : '0640'
+- name: configuration | onionprobe | Manages Onionprobe configuration file permissions
+  block:
+    # This is needed so we can set the proper configuration file group to the debian-tor
+    # But the problem here is that the exact group/GID mapping here may not match.
+    # user, which is the one under with Onionprobe runs inside a container
+    #- name: Manages the debian-tor group needed by the Onionprobe container in the standalone operation mode
+    #  when: onionprobe_operation == 'standalone'
+    #  ansible.builtin.group:
+    #    name: 'debian-tor'
+    #    gid : 119
+
+    # Creates the file if absent with the right set of permissions
+    # Or fixes the permissions for an existing file
+    # This may avoid race conditions
+    - name: configuration | onionprobe | Set Onionprobe configuration file permissions
+      ansible.builtin.file:
+        name  : "{{ onionprobe_config_path }}/{{ onionprobe_config }}"
+        owner : "{{ owner }}"
+        # Ownership and group here could be more restrictive, but then it would be
+        # harder to share this file inside the container for the standalone mode
+        #group : "{{ 'debian-tor' if onionprobe_operation == 'standalone' else group }}"
+        #mode  : '0640'
+        group : "{{ group }}"
+        mode  : '0644'
 
 - name: configuration | onionprobe | Handle Onionprobe config script path
   when: onionprobe_config_script_path | length == 0
