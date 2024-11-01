@@ -137,7 +137,7 @@ onionprobe_daemon_opts: ''
 #
 #  'distro'    : config path is set to /etc/onionprobe
 #  'pip'       : config path is set to {{ onionprobe_virtualenv }}/share/onionprobe/configs
-#  'repository': config path is set to {{ onionprobe_path }}/configs
+#  'repository': config path is set to configs, and is relative to the {{ onionprobe_path }}
 #
 # Examples:
 #
