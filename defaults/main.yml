@@ -10,12 +10,17 @@
 #
 # Available options:
 #
-# 'repository': installs the needed dependencies and clone the Onionprobe repository;
-#               any users in the system may read (and sometimes execute) most of the
+# 'repository': installs the needed dependencies and clone the Onionprobe repository.
+#
+#               Any users in the system may read (and sometimes execute) most of the
 #               files in this working copy; in general no credentials are stored in
 #               this folder; while some files are protected with restrictive file
 #               permissions, others cannot otherwise they cannot be shared with
 #               containers in the standalone operation more described below.
+#
+#               In general this should be safe, as Onionprobe by default does
+#               not need any credentials to be stored on it's configuration
+#               files.
 #
 #               * Dependencies must be available in the distribution.
 #
