@@ -6,15 +6,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-- name: configuration | containers | Setup the container environment file
-  ansible.builtin.template:
-    src   : containers/env.j2
-    dest  : "{{ onionprobe_path }}/.env"
-    owner : "{{ onionprobe_user }}"
-    group : "{{ onionprobe_group }}"
-    mode  : '0640'
-    force : true
-
 - name: configuration | containers | Create the podman config folder for the monitor user
   when: onionprobe_container_runtime == 'podman'
   ansible.builtin.file:
@@ -33,3 +24,13 @@
     owner      : root
     group      : root
     mode       : '0644'
+
+- name: configuration | containers | Setup the container environment file
+  ansible.builtin.template:
+    src   : containers/env.j2
+    dest  : "{{ onionprobe_path }}/.env"
+    owner : "{{ onionprobe_user }}"
+    group : "{{ onionprobe_group }}"
+    mode  : '0640'
+    force : true
+  notify: Restart the Onionprobe service

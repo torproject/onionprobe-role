@@ -10,4 +10,4 @@
   block:
     - name: installation | distro | Install onionprobe package
       ansible.builtin.package:
-        name: installation | distro | onionprobe
+        name: onionprobe

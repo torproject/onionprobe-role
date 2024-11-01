@@ -57,6 +57,12 @@
 - name: operation | single | Onionprobe service configuration when installed from distro
   when: onionprobe_installation == 'distro'
   block:
+    - name: operation | single | Manage the configuration file
+      ansible.builtin.include_tasks: ../resources/configuration/onionprobe.yml
+      vars:
+        owner: root
+        group: root
+
     - name: operation | single | Manage the service environment file
       ansible.builtin.include_tasks: ../resources/service/systemd/environment.yml
       vars:
@@ -69,3 +75,13 @@
     #  ansible.builtin.include_tasks: ../resources/service/systemd/unit.yml
     #  vars:
     #    env_file: "/etc/default/onionprobe"
+
+    # This should not be needed since managing the service config or
+    # environment files should already trigger a daemon reload.
+    #- name: operation | single | Start the Onionprobe service
+    #  when: onionprobe_enable_service is true
+    #  ansible.builtin.systemd:
+    #    name          : "{{ onionprobe_service }}"
+    #    enabled       : true
+    #    daemon_reload : true
+    #    state         : started

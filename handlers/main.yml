@@ -7,9 +7,9 @@
 #
 
 - name: Restart the Onionprobe service
+  when: onionprobe_enable_service is true
   ansible.builtin.systemd:
     name          : "{{ onionprobe_service }}"
     enabled       : true
     daemon_reload : true
     state         : restarted
-  when: onionprobe_enable_service is true

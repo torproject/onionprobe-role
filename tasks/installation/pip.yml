@@ -22,8 +22,12 @@
         name       : onionprobe
         extra_args : '--upgrade'
         virtualenv : "{{ onionprobe_virtualenv }}"
+      become     : true
+      become_user: "{{ onionprobe_user }}"
 
     - name: installation | pip | Install Tor
       ansible.builtin.package:
         name: tor
         state: present
+      become     : true
+      become_user: "{{ onionprobe_user }}"
