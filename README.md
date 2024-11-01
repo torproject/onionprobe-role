@@ -50,20 +50,29 @@ Merge requests are welcome to cover more Operating Systems.
 
 ## Usage
 
-Sample usage in an Ansible playbook:
+Sample usage in an Ansible playbook for a simple monitoring service:
 
 ```yaml
-- name: Onionprobe standalone monitor
+- name: Onionprobe prober
   hosts: my-onion-prober
 
   roles:
     - onionprobe
 
   vars:
-    onionprobe_installation: package
-    onionprobe_operation: single
-    onionprobe_config: securedrop.yml
+    # Installs Onionprobe using the distribution package manager
+    onionprobe_installation: distro
 
+    # Set operation to "single" mode (i.e, just the Onionprobe service)
+    onionprobe_operation: single
+
+    # Monitors SecureDrop instances
+    onionprobe_config: securedrop.yml
+```
+
+Another example, this time for the full [standalone][] node:
+
+```yaml
 - name: Onionprobe standalone monitor
   hosts: my-onion-monitor
 
@@ -71,7 +80,10 @@ Sample usage in an Ansible playbook:
     - onionprobe
 
   vars:
+    # Installs Onionprobe from it's Git repository
     onionprobe_installation: repository
+
+    # Sets operation to standalone (containerized services)
     onionprobe_operation: standalone
 
 ```
