@@ -8,26 +8,6 @@
 
 - name: environment | user | Manage group and user
   block:
-    # Installing acl package is needed so become_user works correctly.
-    #
-    # Otherwise the following exception happens:
-    #
-    #   fatal: [onionprobe-dev]: FAILED! => {"msg": "Failed to set permissions on
-    #   the temporary files Ansible needs to create when becoming an unprivileged
-    #   user (rc: 1, err: chmod: invalid mode:
-    #   'A+user:onionprobe:rx:allow'\nTry 'chmod --help' for more
-    #   information.\n}). For information on working around this, see
-    #   https://docs.ansible.com/ansible-core/2.14/user_guide/become.html#risks-of-becoming-an-unprivileged-user"}
-    #
-    # References:
-    #
-    # * https://docs.ansible.com/ansible-core/2.14/playbook_guide/playbooks_privilege_escalation.html#risks-and-limitations-of-become
-    # * https://stackoverflow.com/questions/46352173/ansible-failed-to-set-permissions-on-the-temporary#56379678
-    # * https://github.com/ansible/ansible/issues/74830
-    - name: environment | user | Install acl
-      ansible.builtin.package:
-        name: acl
-
     - name: environment | user | Manage the onionprobe group
       ansible.builtin.group:
         name : "{{ onionprobe_group }}"

@@ -13,6 +13,13 @@
   ansible.builtin.include_tasks: validation/main.yml
 
 #
+# Preparation
+#
+
+- name: Onionprobe environment preparation
+  ansible.builtin.include_tasks: preparation/main.yml
+
+#
 # Installation
 #
 
