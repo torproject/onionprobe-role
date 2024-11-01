@@ -1,0 +1,12 @@
+# Onionprobe Ansible Role ChangeLog
+
+## v0.0.1 - 2024-11-01
+
+* Initial version with:
+  * Full support for all available installation methods.
+
+  * Basic documentation.
+
+  * Tests with [GitLab CI][].
+
+[GitLab CI]: https://docs.gitlab.com/ee/ci/

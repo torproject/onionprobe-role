@@ -38,7 +38,7 @@ Merge requests are welcome to cover more Operating Systems.
 * For the [standalone][] operation mode:
   * [Docker][] and [Docker Compose][], or [Podman][] and [Podman Compose][] should be
     available in the remote system. As of 2024-10, [Podman][] support is still
-    experimental.
+    [experimental][podman-experimental].
 
 [Systemd]: https://systemd.io
 [ansible.builin.pip]: https://docs.ansible.com/ansible/latest/collections/ansible/builtin/pip_module.html
@@ -47,6 +47,7 @@ Merge requests are welcome to cover more Operating Systems.
 [Podman]: https://podman.io
 [Docker Compose]: https://docs.docker.com/compose/
 [Podman Compose]: https://github.com/containers/podman-compose
+[podman-experimental]: https://gitlab.torproject.org/tpo/onion-services/ansible/onionprobe-role/-/issues/1#note_3125493
 
 ## Usage
 
