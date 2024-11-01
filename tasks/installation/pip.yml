@@ -40,5 +40,3 @@
       ansible.builtin.package:
         name: tor
         state: present
-      become     : true
-      become_user: "{{ onionprobe_user }}"
