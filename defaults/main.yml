@@ -11,9 +11,10 @@
 # Available options:
 #
 # 'repository': installs the needed dependencies and clone the Onionprobe repository;
-#               this won't be a system-wide installation in the sense that other
-#               users with shell access won't have access to Onionprobe, since
-#               it's installed in a more-or-less restricted folder.
+#               any users in the system may read (and sometimes execute) most of the
+#               files in this working copy; in general no credentials are stored in
+#               this folder, and if so they're protected with restrictive file
+#               permissions.
 #
 #               * Dependencies must be available in the distribution.
 #

@@ -30,6 +30,16 @@
         state : directory
         mode  : '0755'
 
+# Creates the file if absent with the right set of permissions
+# Or fixes the permissions for an existing file
+# This may avoid race conditions
+- name: configuration | onionprobe | Set Onionprobe configuration file permissions
+  ansible.builtin.file:
+    name  : "{{ onionprobe_config_path }}/{{ onionprobe_config }}"
+    owner : "{{ owner }}"
+    group : "{{ group }}"
+    mode  : '0640'
+
 - name: configuration | onionprobe | Handle Onionprobe config script path
   when: onionprobe_config_script_path | length == 0
   block:
@@ -116,5 +126,5 @@
         dest  : "{{ onionprobe_config_path }}/{{ onionprobe_config }}"
         owner : "{{ owner }}"
         group : "{{ group }}"
-        mode  : '0755'
+        mode  : '0640'
       notify: Restart the Onionprobe service
