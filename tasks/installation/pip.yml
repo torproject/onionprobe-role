@@ -8,6 +8,9 @@
 
 - name: installation | pip | Installs Onionprobe using pip
   block:
+    - name: installation | pip | Manage group and user
+      ansible.builtin.include_tasks: ../resources/environment/user.yml
+
     - name: installation | pip | Install ansible.builtin.pip dependencies on Debian-like systems
       when: ansible_os_family == 'Debian'
       ansible.builtin.apt:

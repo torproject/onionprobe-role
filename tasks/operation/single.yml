@@ -9,8 +9,9 @@
 - name: operation | single | Onionprobe service configuration when installed from pip
   when: onionprobe_installation == 'pip'
   block:
-    - name: operation | single | Manage group and user
-      ansible.builtin.include_tasks: ../resources/environment/user.yml
+    # User and group are managed during installation
+    #- name: operation | single | Manage group and user
+    #  ansible.builtin.include_tasks: ../resources/environment/user.yml
 
     - name: operation | single | Manage the configuration file
       ansible.builtin.include_tasks: ../resources/configuration/onionprobe.yml
