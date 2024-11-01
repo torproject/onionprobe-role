@@ -1,0 +1,59 @@
+---
+#
+# Ansible Lint configuration the Onionprobe Ansible role
+#
+# For a detailed explanation of supported values, check the documentation at
+# https://ansible.readthedocs.io/projects/lint/configuring/
+#
+# Copyright (C) 2024 The Tor Project, Inc.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+# Excluded paths
+exclude_paths:
+  - .cache/ # implicit unless exclude_paths is defined in config
+  - .gitlab-ci.yml
+  - .molecule/roles
+
+# Enable checking of loop variable prefixes in roles
+loop_var_prefix: "^(__|{role}_)"
+
+# Enforce variable names to follow pattern below, in addition to Ansible own
+# requirements
+var_naming_pattern: "^[a-z_][a-z0-9_]*$"
+
+# Use default rules
+use_default_rules: true
+
+# Skip list
+skip_list:
+  - yaml[colons]
+  - yaml[comments]
+
+# Rules configuration
+enable_list:
+  - args
+  - empty-string-compare
+  - no-log-password
+  - no-same-owner
+  - name[prefix]
+  - galaxy-version-incorrect
+  - yaml
+
+# Ansible-lint does not fail on warnings from the rules or tags listed below
+warn_list:
+  - experimental
+
+# Offline mode disables installation of requirements.yml and schema refreshing
+offline: true
+
+# Define required Ansible's variables to satisfy syntax check
+extra_vars:
+  foo: bar
+  multiline_string_variable: |
+    line1
+    line2
+  complex_variable: ":{;\t$()"
+
+# Allow setting custom prefix for name[prefix] rule
+task_name_prefix: "{stem} | "

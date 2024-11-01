@@ -1,7 +1,48 @@
 #
 # Onionprobe role
 #
+# Copyright (C) 2024 The Tor Project, Inc.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
 
-- name: Onionprobe monitor node
-  include_tasks: monitor.yml
-  when: onionprobe_mode == 'monitor'
+#
+# Validation
+#
+
+- name: Onionprobe config validation
+  ansible.builtin.include_tasks: validation/main.yml
+
+#
+# Preparation
+#
+
+- name: Onionprobe environment preparation
+  ansible.builtin.include_tasks: preparation/main.yml
+
+#
+# Installation
+#
+
+- name: Onionprobe installation using distro-supplied package
+  when: onionprobe_installation == 'distro'
+  ansible.builtin.include_tasks: installation/distro.yml
+
+- name: Onionprobe installation using pip
+  when: onionprobe_installation == 'pip'
+  ansible.builtin.include_tasks: installation/pip.yml
+
+- name: Onionprobe installation using a repository working copy
+  when: onionprobe_installation == 'repository'
+  ansible.builtin.include_tasks: installation/repository.yml
+
+#
+# Operation
+#
+
+- name: Onionprobe single service
+  when: onionprobe_operation == 'single'
+  ansible.builtin.include_tasks: operation/single.yml
+
+- name: Onionprobe full standalone monitor node
+  when: onionprobe_operation == 'standalone'
+  ansible.builtin.include_tasks: operation/standalone.yml

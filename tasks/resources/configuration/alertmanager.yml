@@ -1,0 +1,29 @@
+---
+#
+# Alertmanager configuration file
+#
+# Copyright (C) 2024 The Tor Project, Inc.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+- name: configuration | alertmanager | Configure alertmanager
+  block:
+    - name: configuration | alertmanager | Create the alertmanager contrib config folder
+      ansible.builtin.file:
+        path    : "{{ onionprobe_path }}/contrib/configs/alertmanager"
+        owner   : "{{ onionprobe_user }}"
+        group   : "{{ onionprobe_group }}"
+        mode    : '0755'
+        state   : directory
+        recurse : false
+
+    - name: configuration | alertmanager | Setup the altertmanager contrib config
+      ansible.builtin.template:
+        src   : "{{ onionprobe_alertmanager_template }}"
+        dest  : "{{ onionprobe_path }}/contrib/configs/alertmanager/alertmanager.yml"
+        # Ownership and group here should work both for the Onionprobe user
+        # and the Alertmanager container user
+        owner : "{{ onionprobe_user }}"
+        group : "{{ onionprobe_alertmanager_group }}"
+        mode  : '0640'
+        force : true

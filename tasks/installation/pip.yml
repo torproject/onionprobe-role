@@ -1,0 +1,42 @@
+---
+#
+# Onionprobe installation using pip
+#
+# Copyright (C) 2024 The Tor Project, Inc.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+- name: installation | pip | Installs Onionprobe using pip
+  block:
+    - name: installation | pip | Manage group and user
+      ansible.builtin.include_tasks: ../resources/environment/user.yml
+
+    - name: installation | pip | Install ansible.builtin.pip dependencies on Debian-like systems
+      when: ansible_os_family == 'Debian'
+      ansible.builtin.apt:
+        name:
+          - python3-pip
+          - python3-virtualenv
+          - python3-setuptools
+        state: present
+
+    - name: installation | pip | Create the virtualenv folder
+      ansible.builtin.file:
+        name  : "{{ onionprobe_virtualenv }}"
+        state : directory
+        owner : "{{ onionprobe_user }}"
+        group : "{{ onionprobe_group }}"
+        mode  : '0755'
+
+    - name: installation | pip | Install onionprobe package
+      ansible.builtin.pip:
+        name       : onionprobe
+        extra_args : '--upgrade'
+        virtualenv : "{{ onionprobe_virtualenv }}"
+      become     : true
+      become_user: "{{ onionprobe_user }}"
+
+    - name: installation | pip | Install Tor
+      ansible.builtin.package:
+        name: tor
+        state: present

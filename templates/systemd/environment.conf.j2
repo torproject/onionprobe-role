@@ -1,0 +1,15 @@
+#
+# Default settings for the Onionprobe system-wide service
+#
+# This is used only for the system-wide service and has no
+# effect when using the onionprobe command line directly.
+#
+# Copyright (C) 2024 The Tor Project, Inc.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+# The configuration file to use
+CONFIG="{{ onionprobe_config_path }}/{{ onionprobe_config }}"
+
+# Additional Onionprobe command line options to use
+DAEMON_OPTS="{{ onionprobe_daemon_opts }}"

@@ -1,0 +1,36 @@
+---
+#
+# Onionprobe environment file
+#
+# Copyright (C) 2024 The Tor Project, Inc.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+- name: systemd | environment | Check if this Ansible role can handle the systemd environment file
+  when: ansible_os_family != 'Debian' and destination == '/etc/default/onionprobe'
+  ansible.builtin.debug:
+    msg:
+      - "The Onionprobe Ansible role currently does not handle the environment file on {{ ansible_distribution }} when it's configured to {{ destination }}."
+      - "Please manage it manually, or create a merge request."
+
+- name: systemd | environment | Manage the service environment
+  when: ansible_os_family == 'Debian' or destination != '/etc/default/onionprobe'
+  block:
+    - name: systemd | environment | Manage the service environment folder
+      ansible.builtin.file:
+        path  : "{{ destination | dirname }}"
+        state : directory
+        owner : "{{ owner }}"
+        group : "{{ group }}"
+        mode  : '0755'
+
+    - name: systemd | environment | Setup the service environment file
+      block:
+        - name: systemd | environment | Manage the service environment file
+          ansible.builtin.template:
+            src   : "systemd/environment.conf.j2"
+            dest  : "{{ destination }}"
+            owner : "{{ owner }}"
+            group : "{{ group }}"
+            mode  : '0644'
+          notify: Restart the Onionprobe service

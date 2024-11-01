@@ -1,19 +1,15 @@
 ---
+#
+# Onionprobe Ansible molecule test
+#
+# Copyright (C) 2024 The Tor Project, Inc.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
 dependency:
   name: galaxy
   options:
     requirements-file: requirements-podman.yml
-
-platforms:
-  - name: bookworm
-    # Use a container with Python pre-installed
-    image: docker.io/python:bookworm
-    pre_build_image: true
-    privileged: true
-
-    # Container entrypoint
-    # A command that keeps the container running
-    command: ${MOLECULE_DOCKER_COMMAND:-"sleep infinity"}
 
 driver:
   name: podman
@@ -22,3 +18,44 @@ driver:
     login_cmd_template: "podman exec -ti {instance} bash"
     ansible_connection_options:
       ansible_connection: podman
+
+platforms:
+  - name: standalone
+    # Use a container with Python pre-installed
+    image           : docker.io/python:bookworm
+    pre_build_image : true
+    privileged      : true
+
+    # Container entrypoint
+    # A command that keeps the container running
+    command: ${MOLECULE_DOCKER_COMMAND:-"sleep infinity"}
+
+  - name: single-distro
+    # Use a container with Python pre-installed
+    image           : docker.io/python:bookworm
+    pre_build_image : true
+    privileged      : true
+
+    # Container entrypoint
+    # A command that keeps the container running
+    command: ${MOLECULE_DOCKER_COMMAND:-"sleep infinity"}
+
+  - name: single-pip
+    # Use a container with Python pre-installed
+    image           : docker.io/python:bookworm
+    pre_build_image : true
+    privileged      : true
+
+    # Container entrypoint
+    # A command that keeps the container running
+    command: ${MOLECULE_DOCKER_COMMAND:-"sleep infinity"}
+
+  - name: single-repository
+    # Use a container with Python pre-installed
+    image           : docker.io/python:bookworm
+    pre_build_image : true
+    privileged      : true
+
+    # Container entrypoint
+    # A command that keeps the container running
+    command: ${MOLECULE_DOCKER_COMMAND:-"sleep infinity"}

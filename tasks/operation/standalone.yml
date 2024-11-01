@@ -1,0 +1,22 @@
+---
+#
+# Onionprobe standalone monitoring mode
+#
+# Copyright (C) 2024 The Tor Project, Inc.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+- name: operation | standalone | Onionprobe configuration
+  ansible.builtin.include_tasks: ../resources/configuration/onionprobe.yml
+  vars:
+    owner: "{{ onionprobe_user }}"
+    group: "{{ onionprobe_group }}"
+
+- name: operation | standalone | Alertmanager configuration
+  ansible.builtin.include_tasks: ../resources/configuration/alertmanager.yml
+
+- name: operation | standalone | Container configuration
+  ansible.builtin.include_tasks: ../resources/configuration/containers.yml
+
+- name: operation | standalone | Service configuration
+  ansible.builtin.include_tasks: ../resources/service/systemd/unit.yml

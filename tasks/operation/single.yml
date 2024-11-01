@@ -1,0 +1,88 @@
+---
+#
+# Onionprobe single operation mode
+#
+# Copyright (C) 2024 The Tor Project, Inc.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+- name: operation | single | Onionprobe service configuration when installed from pip
+  when: onionprobe_installation == 'pip'
+  block:
+    # User and group are managed during installation
+    #- name: operation | single | Manage group and user
+    #  ansible.builtin.include_tasks: ../resources/environment/user.yml
+
+    - name: operation | single | Manage the configuration file
+      ansible.builtin.include_tasks: ../resources/configuration/onionprobe.yml
+      vars:
+        owner: "{{ onionprobe_user }}"
+        group: "{{ onionprobe_group }}"
+
+    - name: operation | single | Manage the service environment file
+      ansible.builtin.include_tasks: ../resources/service/systemd/environment.yml
+      vars:
+        destination : "{{ onionprobe_path }}/systemd.conf"
+        owner       : "{{ onionprobe_user }}"
+        group       : "{{ onionprobe_group }}"
+
+    - name: operation | single | Manage Onionprobe's Systemd service
+      ansible.builtin.include_tasks: ../resources/service/systemd/unit.yml
+      vars:
+        env_file: "{{ onionprobe_path }}/systemd.conf"
+
+- name: operation | single | Onionprobe service configuration when installed from repository
+  when: onionprobe_installation == 'repository'
+  block:
+    - name: operation | single | Manage group and user
+      ansible.builtin.include_tasks: ../resources/environment/user.yml
+
+    - name: operation | single | Manage the configuration file
+      ansible.builtin.include_tasks: ../resources/configuration/onionprobe.yml
+      vars:
+        owner: "{{ onionprobe_user }}"
+        group: "{{ onionprobe_group }}"
+
+    - name: operation | single | Manage the service environment file
+      ansible.builtin.include_tasks: ../resources/service/systemd/environment.yml
+      vars:
+        destination: "{{ onionprobe_path }}/contrib/systemd.conf"
+        owner: "{{ onionprobe_user }}"
+        group: "{{ onionprobe_group }}"
+
+    - name: operation | single | Manage Onionprobe's Systemd service
+      ansible.builtin.include_tasks: ../resources/service/systemd/unit.yml
+      vars:
+        env_file: "{{ onionprobe_path }}/contrib/systemd.conf"
+
+- name: operation | single | Onionprobe service configuration when installed from distro
+  when: onionprobe_installation == 'distro'
+  block:
+    - name: operation | single | Manage the configuration file
+      ansible.builtin.include_tasks: ../resources/configuration/onionprobe.yml
+      vars:
+        owner: root
+        group: root
+
+    - name: operation | single | Manage the service environment file
+      ansible.builtin.include_tasks: ../resources/service/systemd/environment.yml
+      vars:
+        destination : "/etc/default/onionprobe"
+        owner       : root
+        group       : root
+
+    # Distros should take care of managing the Onionprobe Systemd Unit
+    #- name: operation | single | Manage Onionprobe's Systemd service
+    #  ansible.builtin.include_tasks: ../resources/service/systemd/unit.yml
+    #  vars:
+    #    env_file: "/etc/default/onionprobe"
+
+    # This should not be needed since managing the service config or
+    # environment files should already trigger a daemon reload.
+    #- name: operation | single | Start the Onionprobe service
+    #  when: onionprobe_enable_service is true
+    #  ansible.builtin.systemd:
+    #    name          : "{{ onionprobe_service }}"
+    #    enabled       : true
+    #    daemon_reload : true
+    #    state         : started

@@ -1,0 +1,39 @@
+---
+#
+# Onionprobe Ansible role test tasks
+#
+# Copyright (C) 2024 The Tor Project, Inc.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+- name: deps | Install basic dependencies
+  block:
+    # Sudo is needed by some Ansible modules, and may not be available in the
+    # container instance
+    - name: deps | Install sudo
+      ansible.builtin.package:
+        name: sudo
+
+    # This is only installed so paths like /etc/systemd/system become available.
+    # Trying to start services will only throw errors like
+    # "System has not been booted with systemd as init system (PID 1). Can't
+    # operate. Failed to connect to bus: Host is down".
+    - name: deps | Install systemd
+      ansible.builtin.package:
+        name: systemd
+
+    # Install ansible.builtin.pip dependencies
+    #- name: deps | Install setuptools
+    #  ansible.builtin.apt:
+    #    name:
+    #      - python3-setuptools
+    #      - python3-pip
+    #      - python3-virtualenv
+    #  when: ansible_os_family == 'Debian'
+
+- name: deps | Create the needed groups
+  block:
+    - name: deps | Create the docker group
+      when: onionprobe_container_runtime == 'docker'
+      ansible.builtin.group:
+        name : docker

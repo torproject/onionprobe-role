@@ -1,0 +1,67 @@
+---
+#
+# Onionprobe installation using a repository working copy
+#
+# Copyright (C) 2024 The Tor Project, Inc.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+- name: installation | repository | Install Onionprobe dependencies
+  block:
+    - name: installation | repository | Check if this Ansible role can install packages in this distro
+      when: ansible_os_family != 'Debian'
+      ansible.builtin.debug:
+        msg:
+          - "The Onionprobe Ansible role currently does not handle dependencies on {{ ansible_distribution }}."
+          - "Please manage them manually, or create a merge request."
+
+    - name: installation | repository | Install Onionprobe dependencies on Debian-like systems
+      when: ansible_os_family == 'Debian'
+      ansible.builtin.apt:
+        name:
+          - git
+          - ca-certificates
+          - python3-prometheus-client
+          - python3-stem
+          - python3-cryptography
+          - python3-bs4
+          - python3-yaml
+          - python3-pytest
+          - python3-requests
+          - python3-socks
+          - tor
+
+- name: installation | repository | Manage group and user
+  ansible.builtin.include_tasks: ../resources/environment/user.yml
+
+- name: installation | repository | Manage repository
+  block:
+    # Note that Git is able to clone to an empty folder, so there's no harm
+    # in creating this folder in the first run when the repository is still not
+    # cloned.
+    #
+    # This folder needs to be managed beforehand, to make sure the Onionprobe
+    # user can write in to it in cases it's located in systemd-wide folders
+    # like /var/lib.
+    - name: installation | repository | Manage the Onionprobe folder
+      ansible.builtin.file:
+        path  : "{{ onionprobe_path }}"
+        owner : "{{ onionprobe_user }}"
+        group : "{{ onionprobe_group }}"
+        state : directory
+        # We _could_ set the mode to 0750, but then we would have trouble sharing
+        # this folder with containers
+        mode    : '0755'
+        recurse : false
+
+    - name: installation | repository | Manage the Onionprobe Git repository
+      ansible.builtin.git:
+        repo    : "{{ onionprobe_repo }}"
+        dest    : "{{ onionprobe_path }}"
+        version : "{{ onionprobe_repository_version }}"
+        # We're setting the following umask so containers can also access the repository,
+        # given that they may run under different users; a more restrictive setting could
+        # be possible, but then containers would probably not access the needed files.
+        umask   : '022'
+      become      : true
+      become_user : "{{ onionprobe_user }}"

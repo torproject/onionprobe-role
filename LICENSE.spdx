@@ -1,0 +1,6 @@
+SPDXVersion: SPDX-2.1
+DataLicense: CC0-1.0
+PackageName: Onionprobe Ansible Role
+PackageOriginator: The Tor Project, Inc.
+PackageHomePage: https://gitlab.torproject.org/tpo/onion-services/ansible/onionprobe-role
+PackageLicenseDeclared: GPL-3.0-or-later

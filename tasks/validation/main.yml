@@ -1,0 +1,27 @@
+---
+#
+# Config validation
+#
+# Copyright (C) 2024 The Tor Project, Inc.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+- name: validation | main | Onionprobe config validation
+  block:
+    - name: validation | main | Checks that the standalone mode can only be used with the repository installation method
+      ansible.builtin.assert:
+        quiet : true
+        that  :
+          - "onionprobe_operation != 'standalone' or (onionprobe_operation == 'standalone' and onionprobe_installation == 'repository')"
+
+    - name: validation | main | Checks that the configuration file is set
+      ansible.builtin.assert:
+        quiet : true
+        that  :
+          - "onionprobe_config != ''"
+
+    - name: validation | main | Ensure onionprobe_config_src and onionprobe_config_script_src are not simultaneously set
+      ansible.builtin.assert:
+        quiet : true
+        that  :
+          - "onionprobe_config_src == '' or onionprobe_config_script_src == ''"

@@ -1,0 +1,12 @@
+---
+# Runs the test on localhost
+# https://ansible.readthedocs.io/projects/molecule/configuration/#molecule.driver.delegated.Delegated
+driver:
+  name: default
+  options:
+    managed: false
+    ansible_connection_options:
+      ansible_connection: local
+
+platforms:
+  - name: localhost

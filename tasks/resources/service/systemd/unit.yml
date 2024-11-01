@@ -1,0 +1,35 @@
+---
+#
+# Onionprobe systemd service
+#
+# Copyright (C) 2024 The Tor Project, Inc.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+#- name: systemd | unit | Configure the systemd service file for the monitoring node
+#  ansible.builtin.copy:
+#    remote_src: true
+#    src: "{{ onionprobe_path }}/configs/systemd/onionprobe-monitor.service"
+#    dest: "/etc/systemd/system/{{ onionprobe_service }}.service"
+#    owner: root
+#    group: root
+#    mode: '0644'
+
+- name: systemd | unit | Configure the Onionprobe service
+  ansible.builtin.template:
+    src   : "systemd/onionprobe-{{ onionprobe_operation }}.service.j2"
+    dest  : "/etc/systemd/system/{{ onionprobe_service }}.service"
+    owner : root
+    group : root
+    mode  : '0644'
+  notify: Restart the Onionprobe service
+
+- name: systemd | unit | Ensure the Onionprobe service is running
+  block:
+    - name: systemd | unit | Enable the systemd service for the monitoring node
+      when: onionprobe_enable_service is true
+      ansible.builtin.systemd:
+        name          : "{{ onionprobe_service }}"
+        enabled       : true
+        daemon_reload : true
+        state         : started

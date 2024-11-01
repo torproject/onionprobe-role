@@ -1,0 +1,145 @@
+---
+#
+# Onionprobe configuration file
+#
+# Copyright (C) 2024 The Tor Project, Inc.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+- name: configuration | onionprobe | Handle Onionprobe config path
+  when: onionprobe_config_path | length == 0
+  block:
+    - name: configuration | onionprobe | Set onionprobe_config_path for the distro installation method
+      when: onionprobe_installation == 'distro'
+      ansible.builtin.set_fact:
+        onionprobe_config_path: /etc/onionprobe
+
+    - name: configuration | onionprobe | Set onionprobe_config_path for the pip installation method
+      when: onionprobe_installation == 'pip'
+      ansible.builtin.set_fact:
+        onionprobe_config_path: "{{ onionprobe_virtualenv }}/share/onionprobe/configs"
+
+    - name: configuration | onionprobe | Set onionprobe_config_path for the repository installation method
+      when: onionprobe_installation == 'repository'
+      ansible.builtin.set_fact:
+        onionprobe_config_path: "{{ onionprobe_path }}/configs"
+
+    - name: configuration | onionprobe | Manage the configuration path
+      ansible.builtin.file:
+        path  : "{{ onionprobe_config_path }}"
+        state : directory
+        mode  : '0755'
+
+- name: configuration | onionprobe | Manages Onionprobe configuration file permissions
+  block:
+    # This is needed so we can set the proper configuration file group to the debian-tor
+    # But the problem here is that the exact group/GID mapping here may not match.
+    # user, which is the one under with Onionprobe runs inside a container
+    #- name: Manages the debian-tor group needed by the Onionprobe container in the standalone operation mode
+    #  when: onionprobe_operation == 'standalone'
+    #  ansible.builtin.group:
+    #    name: 'debian-tor'
+    #    gid : 119
+
+    # Creates the file if absent with the right set of permissions
+    # Or fixes the permissions for an existing file
+    # This may avoid race conditions
+    - name: configuration | onionprobe | Set Onionprobe configuration file permissions
+      ansible.builtin.file:
+        name  : "{{ onionprobe_config_path }}/{{ onionprobe_config }}"
+        owner : "{{ owner }}"
+        # Ownership and group here could be more restrictive, but then it would be
+        # harder to share this file inside the container for the standalone mode
+        #group : "{{ 'debian-tor' if onionprobe_operation == 'standalone' else group }}"
+        #mode  : '0640'
+        group : "{{ group }}"
+        mode  : '0644'
+
+- name: configuration | onionprobe | Handle Onionprobe config script path
+  when: onionprobe_config_script_path | length == 0
+  block:
+    - name: configuration | onionprobe | Set onionprobe_config_script_path for the distro installation method
+      when: onionprobe_installation == 'distro'
+      ansible.builtin.set_fact:
+        onionprobe_config_script_path: /usr/onionprobe/examples
+
+    - name: configuration | onionprobe | Set onionprobe_config_script_path for the pip installation method
+      when: onionprobe_installation == 'pip'
+      ansible.builtin.set_fact:
+        onionprobe_config_script_path: "{{ onionprobe_virtualenv }}/share/onionprobe/examples"
+
+    - name: configuration | onionprobe | Set onionprobe_config_script_path for the repository installation method
+      when: onionprobe_installation == 'repository'
+      ansible.builtin.set_fact:
+        onionprobe_config_script_path: "{{ onionprobe_path }}/packages"
+
+- name: configuration | onionprobe | Manage the config generation script
+  when: onionprobe_config_script_src | length != 0
+  block:
+    - name: configuration | onionprobe | Manage the config generation script path
+      ansible.builtin.file:
+        path  : "{{ onionprobe_config_script_path }}"
+        owner : "{{ owner }}"
+        group : "{{ group }}"
+        mode  : '0755'
+        state : directory
+
+    - name: configuration | onionprobe | Copy custom config generation script
+      ansible.builtin.copy:
+        src   : "{{ onionprobe_config_script_src }}"
+        dest  : "{{ onionprobe_config_script_path }}"
+        owner : "{{ owner }}"
+        group : "{{ group }}"
+        mode  : '0755'
+
+    - name: configuration | onionprobe | Checks for existing configuration before running the config script
+      ansible.builtin.stat:
+        path: "{{ onionprobe_config_path }}/{{ onionprobe_config }}"
+      register: onionprobe_config_pre_script_stat
+
+    - name: configuration | onionprobe | Runs configuration script as root when not in standalone mode
+      when: onionprobe_operation != 'standalone' and owner == 'root'
+      ansible.builtin.command:
+        cmd   : "{{ onionprobe_config_script_path }}/{{ onionprobe_config_script_src | basename }} {{ onionprobe_config_script_params }}"
+        chdir : "{{ onionprobe_config_path }}"
+      changed_when: true
+      #notify: Restart the Onionprobe service
+
+    # Tagging with 'noaq: inline-env-var' as this seems to be triggering a false positive with ansible-lint
+    # https://ansible.readthedocs.io/projects/lint/rules/inline-env-var/
+    - name: configuration | onionprobe | Runs configuration script as the onionprobe user when not in standalone mode # noqa: inline-env-var
+      when: onionprobe_operation != 'standalone' and owner != 'root'
+      ansible.builtin.command:
+        cmd         : "{{ onionprobe_config_script_path }}/{{ onionprobe_config_script_src | basename }} {{ onionprobe_config_script_params }}"
+        chdir       : "{{ onionprobe_config_path }}"
+        become      : true
+        become_user : "{{ owner }}"
+      changed_when: true
+      #notify: Restart the Onionprobe service
+
+    - name: configuration | onionprobe | Checks changes in configuration after running the config script
+      ansible.builtin.stat:
+        path: "{{ onionprobe_config_path }}/{{ onionprobe_config }}"
+      register: onionprobe_config_post_script_stat
+
+    # Workaround for change detection in Onionprobe's configuration after the config script is run
+    # https://stackoverflow.com/questions/62182998/how-do-you-notify-a-handler-in-ansible-based-solely-on-a-conditional
+    - name: configuration | onionprobe | Notify the Onionprobe service if configuration has changed
+      when: onionprobe_config_post_script_stat != onionprobe_config_pre_script_stat
+      ansible.builtin.assert:
+        that  : true
+        quiet : true
+      changed_when : true
+      notify       : Restart the Onionprobe service
+
+- name: configuration | onionprobe | Manages Onionprobe configuration file
+  block:
+    - name: configuration | onionprobe | Copy configuration script file
+      when: onionprobe_config_src | length != 0
+      ansible.builtin.copy:
+        src   : "{{ onionprobe_config_src }}"
+        dest  : "{{ onionprobe_config_path }}/{{ onionprobe_config }}"
+        owner : "{{ owner }}"
+        group : "{{ group }}"
+        mode  : '0640'
+      notify: Restart the Onionprobe service

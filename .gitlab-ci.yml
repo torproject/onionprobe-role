@@ -1,40 +1,31 @@
 ---
-# Docker-in-Docker CI workflow.
 #
-# GitLab CI config adapted from
-# https://ansible.readthedocs.io/projects/molecule/ci/#gitlab-ci
+# GitLab CI for the Onionprobe Ansible role
 #
-# Disabled, since Tor's GitLab don't support DinD, as of 2024-10-09:
+# Copyright (C) 2024 The Tor Project, Inc.
+# SPDX-License-Identifier: GPL-3.0-or-later
 #
-# * https://gitlab.torproject.org/tpo/tpa/renovate-cron/-/issues/2
-# * https://gitlab.torproject.org/tpo/core/onionmasq/-/issues/112
-#
-#pytest_docker:
-#  stage: test
-#
-#  image: docker:stable-dind
-#
-#  services:
-#    - docker:dind
-#
-#  before_script:
-#    - apk add --no-cache
-#      python3 python3-dev py3-pip gcc git curl build-base
-#      autoconf automake py3-cryptography linux-headers
-#      musl-dev libffi-dev openssl-dev openssh
-#    - python3 -m pip install ansible molecule-plugins[docker] pytest-ansible
-#    - python3 --version
-#    - ansible --version
-#    - molecule --version
-#    - pytest --version
-#    - docker info
-#
-#  script:
-#    - pytest -k docker -r A
+
+# Linting
+lint:
+  stage: test
+
+  image: debian:bookworm
+
+  before_script:
+    - apt-get update
+    - apt install -y python3-pip ansible
+    - python3 -m pip install ansible-lint --break-system-packages
+    - ansible --version
+    - ansible-lint --version
+    - mkdir -p molecule/podman/roles && ln -s ../../.. molecule/podman/roles/onionprobe
+    - mkdir -p molecule/local/roles  && ln -s ../../.. molecule/local/roles/onionprobe
+
+  script:
+    - ansible-lint
 
 # Podman CI workflow
-# This may also need privileged containers.
-pytest_podman:
+molecule_podman:
   stage: test
 
   image:
@@ -45,20 +36,18 @@ pytest_podman:
   before_script:
     - apt-get update
     - apt install -y sudo python3-pip ansible
-    - python3 -m pip install molecule-plugins[podman] pytest-ansible --break-system-packages
+    - python3 -m pip install molecule-plugins[podman] --break-system-packages
     - sudo -u podman python3 --version
     - sudo -u podman ansible --version
     - sudo -u podman molecule --version
-    - sudo -u podman pytest --version
     - sudo -u podman podman info
     - sudo -u podman mkdir -p molecule/podman/roles && sudo -u podman ln -s ../../.. molecule/podman/roles/onionprobe
 
   script:
-    #- sudo -u podman pytest -k podman -r A
     - sudo -u podman molecule test -s podman
 
 # Run Ansible tests directly in the CI containers
-#pytest_local:
+#molecule_local:
 #  stage: test
 #
 #  image: debian:bookworm
@@ -66,13 +55,11 @@ pytest_podman:
 #  before_script:
 #    - apt-get update
 #    - apt install -y python3-pip ansible
-#    - python3 -m pip install molecule pytest-ansible --break-system-packages
+#    - python3 -m pip install molecule --break-system-packages
 #    - python3 --version
 #    - ansible --version
 #    - molecule --version
-#    - pytest --version
 #    - mkdir -p molecule/podman/roles && ln -s ../../.. molecule/podman/roles/onionprobe
 #
 #  script:
-#    #- pytest -k local -r A
 #    - molecule test -s local
