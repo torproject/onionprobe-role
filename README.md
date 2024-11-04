@@ -92,3 +92,14 @@ Another example, this time for the full [standalone][] node:
 ## Configuration
 
 Check [defaults/main.yml](defaults/main.yml) for a commented list of variables.
+
+## Development
+
+This role has [molecule tests](molecule):
+
+* The `podman` scenario is a generic one and is well suited for testing both
+  locally and through CI.
+* The `local` scenario actually applies the configuration into the running
+  node, so be careful were to run it.
+
+A [Makefile](Makefile) exists to help local testing.
