@@ -11,7 +11,10 @@ galaxy_info:
   platforms:
     - name: Debian
       versions:
-        - "12"
+        - "all"
+    - name: Ubuntu
+      versions:
+        - "all"
   galaxy_tags:
     - networking
     - tor
