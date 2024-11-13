@@ -7,7 +7,7 @@ galaxy_info:
   description: Onionsprobe Ansible Role
   company: "The Tor Project, Inc."
   license: "GPLv3"
-  min_ansible_version: 2.8
+  min_ansible_version: "2.8"
     platforms:
       - name: Debian
         versions:
