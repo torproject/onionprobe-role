@@ -6,8 +6,12 @@ galaxy_info:
   author: rhatto
   description: Onionsprobe Ansible Role
   company: "The Tor Project, Inc."
-  license: "license (GPL-3)"
-  min_ansible_version: 2.4
+  license: "GPLv3"
+  min_ansible_version: 2.8
+    platforms:
+      - name: Debian
+        versions:
+          - "12"
   galaxy_tags:
     - networking
     - tor
