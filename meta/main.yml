@@ -3,7 +3,7 @@ dependencies: []
 
 galaxy_info:
   role_name: onionprobe
-  author: rhatto
+  author: torproject
   description: Onionsprobe Ansible Role
   company: "The Tor Project, Inc."
   license: "GPLv3"
