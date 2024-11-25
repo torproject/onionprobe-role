@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Onionprobe Ansible Role Community Support
+    url: https://forum.torproject.org/c/support/onion-services
+    about: Please ask and answer questions here.
+  - name: Onionprobe Ansible Role GitLab project
+    url: https://gitlab.torproject.org/tpo/onion-services/ansible/onionprobe-role
+    about: Please report issues here.

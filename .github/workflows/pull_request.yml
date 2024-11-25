@@ -1,0 +1,13 @@
+name: Close Pull Request
+
+on:
+  pull_request_target:
+    types: [opened]
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: superbrothers/close-pull-request@v3
+      with:
+        comment: "Please submit pull requests to the Onionprobe Ansible Role issue tracker at https://gitlab.torproject.org/tpo/onion-services/ansible/onionprobe-role/-/issues"
