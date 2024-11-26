@@ -2,7 +2,7 @@
 # Makefile for developing the Onionprobe Ansible Role
 #
 # Copyright (C) 2024 The Tor Project, Inc.
-# SPDX-License-Identifier: GPL-3.0-or-later
+# SPDX-License-Identifier: AGPL-3.0-or-later
 #
 
 # Provisioning

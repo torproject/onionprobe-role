@@ -3,7 +3,7 @@
 # Container configuration
 #
 # Copyright (C) 2024 The Tor Project, Inc.
-# SPDX-License-Identifier: GPL-3.0-or-later
+# SPDX-License-Identifier: AGPL-3.0-or-later
 #
 
 - name: configuration | containers | Create the podman config folder for the monitor user

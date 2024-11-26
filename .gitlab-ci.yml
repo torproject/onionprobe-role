@@ -3,7 +3,7 @@
 # GitLab CI for the Onionprobe Ansible role
 #
 # Copyright (C) 2024 The Tor Project, Inc.
-# SPDX-License-Identifier: GPL-3.0-or-later
+# SPDX-License-Identifier: AGPL-3.0-or-later
 #
 
 # Linting
