@@ -9,6 +9,10 @@
 provision:
 	@./scripts/provision
 
+# Linting
+lint:
+	@ansible-lint
+
 # Podman tests
 test-podman:
 	@molecule test -s podman
