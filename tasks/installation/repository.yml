@@ -43,7 +43,7 @@
     # This folder needs to be managed beforehand, to make sure the Onionprobe
     # user can write in to it in cases it's located in systemd-wide folders
     # like /var/lib.
-    - name: installation | repository | Manage the Onionprobe folder
+    - name: installation | repository | Manage the Onionprobe application folder
       ansible.builtin.file:
         path  : "{{ onionprobe_path }}"
         owner : "{{ onionprobe_user }}"
@@ -63,5 +63,14 @@
         # given that they may run under different users; a more restrictive setting could
         # be possible, but then containers would probably not access the needed files.
         umask   : '022'
+      # Setting a temporary folder outside the user folder ensures the git clone can work
+      # in special situations like when Ansible is running as root and creates a temporary
+      # folder in {{ onionspray_path }} before doing a clone.
+      #
+      # This is currently commented out since {{ onionprobe_home }} defaults to a value
+      # different than {{ onionspray_path }}. Check ChangeLog entry for v0.0.3 for
+      # additional details.
+      #environment:
+      #  ANSIBLE_REMOTE_TMP: "/tmp/{{ onionspray_user }}/ansible"
       become      : true
       become_user : "{{ onionprobe_user }}"

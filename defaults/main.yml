@@ -101,14 +101,23 @@ onionprobe_virtualenv: "{{ onionprobe_path }}/venv"
 onionprobe_repository_version: HEAD
 
 #
-# User, group and folder
+# User, group and folders
+#
+# In most situations, {{ onionprobe_home }} can also be set to the same value
+# as {{ onionprobe_path }}, but note that this can lead to a git clone error
+# when running as root, due to Ansible using `onionprobe_path` as a base for
+# temporary files (and Git refuses to clone into non-empty folders).
+#
+# So, to be in the safe side, {{{ onionspray_home }} and {{ onionprobe_path }}
+# defaults to different folders.
 #
 
 onionprobe_user    : onionprobe
 onionprobe_group   : onionprobe
 onionprobe_uid     : 2000
 onionprobe_gid     : 2000
-onionprobe_path    : /var/lib/onionprobe
+onionprobe_home    : "/home/{{ onionprobe_user }}"
+onionprobe_path    : "/var/lib/{{ onionprobe_user }}"
 
 #
 # Repository location

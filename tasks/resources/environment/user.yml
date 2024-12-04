@@ -21,5 +21,15 @@
         group         : "{{ onionprobe_group }}"
         groups        : "{{ ['docker'] if (onionprobe_container_runtime == 'docker' and onionprobe_operation == 'standalone') else [] }}"
         create_home   : false
-        home          : "{{ onionprobe_path }}"
+        home          : "{{ onionprobe_home }}"
         password_lock : true
+
+    - name: environment | user | Manage the Onionprobe user folder
+      when: onionprobe_home != onionprobe_path
+      ansible.builtin.file:
+        path  : "{{ onionprobe_home }}"
+        owner : "{{ onionprobe_user }}"
+        group : "{{ onionprobe_group }}"
+        state : directory
+        mode    : '0750'
+        recurse : false
