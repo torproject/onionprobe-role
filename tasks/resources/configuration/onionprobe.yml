@@ -27,6 +27,8 @@
     - name: configuration | onionprobe | Manage the configuration path
       ansible.builtin.file:
         path  : "{{ onionprobe_config_path }}"
+        owner : "{{ owner }}"
+        group : "{{ group }}"
         state : directory
         mode  : '0755'
 
