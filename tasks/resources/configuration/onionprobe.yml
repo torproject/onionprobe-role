@@ -32,7 +32,7 @@
         state : directory
         mode  : '0755'
 
-- name: configuration | onionprobe | Manages Onionprobe configuration file permissions
+- name: configuration | onionprobe | Manages Onionprobe configuration file existence
   block:
     # This is needed so we can set the proper configuration file group to the debian-tor
     # But the problem here is that the exact group/GID mapping here may not match.
@@ -43,10 +43,16 @@
     #    name: 'debian-tor'
     #    gid : 119
 
+    - name: configuration | onionprobe | Checks for existing configuration file before trying to manage it
+      ansible.builtin.stat:
+        path: "{{ onionprobe_config_path }}/{{ onionprobe_config }}"
+      register: onionprobe_config_pre
+
     # Creates the file if absent with the right set of permissions
     # Or fixes the permissions for an existing file
     # This may avoid race conditions
     - name: configuration | onionprobe | Set Onionprobe configuration file permissions
+      when: not onionprobe_config_pre.stat.exists
       ansible.builtin.file:
         name  : "{{ onionprobe_config_path }}/{{ onionprobe_config }}"
         owner : "{{ owner }}"
@@ -98,7 +104,7 @@
     - name: configuration | onionprobe | Checks for existing configuration before running the config script
       ansible.builtin.stat:
         path: "{{ onionprobe_config_path }}/{{ onionprobe_config }}"
-      register: onionprobe_config_pre_script_stat
+      register: onionprobe_config_pre_script
 
     - name: configuration | onionprobe | Runs configuration script as root when not in standalone mode
       when: onionprobe_operation != 'standalone' and owner == 'root'
@@ -123,12 +129,12 @@
     - name: configuration | onionprobe | Checks changes in configuration after running the config script
       ansible.builtin.stat:
         path: "{{ onionprobe_config_path }}/{{ onionprobe_config }}"
-      register: onionprobe_config_post_script_stat
+      register: onionprobe_config_post_script
 
     # Workaround for change detection in Onionprobe's configuration after the config script is run
     # https://stackoverflow.com/questions/62182998/how-do-you-notify-a-handler-in-ansible-based-solely-on-a-conditional
     - name: configuration | onionprobe | Notify the Onionprobe service if configuration has changed
-      when: onionprobe_config_post_script_stat != onionprobe_config_pre_script_stat
+      when: onionprobe_config_post_script.stat.checksum != onionprobe_config_pre_script.stat.checksum
       ansible.builtin.assert:
         that  : true
         quiet : true
