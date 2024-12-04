@@ -55,7 +55,7 @@
         #group : "{{ 'debian-tor' if onionprobe_operation == 'standalone' else group }}"
         #mode  : '0640'
         group : "{{ group }}"
-        state : file
+        state : touch
         mode  : '0644'
 
 - name: configuration | onionprobe | Handle Onionprobe config script path
