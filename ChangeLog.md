@@ -8,10 +8,21 @@
   Ansible using `onionprobe_path` as a base for temporary files (and Git refuses
   to clone into non-empty folders). Example error:
 
-        TASK [onionprobe : installation | repository | Manage the Onionprobe Git repository] **********************************************************************************************************************************************************
-        [WARNING]: Module remote_tmp /var/lib/onionprobe/.ansible/tmp did not exist and was created with a mode of 0700, this may cause issues when running as another user. To avoid this, create the remote_tmp dir with the correct permissions
-        manually
-        fatal: [oniontreva01]: FAILED! => {"changed": false, "cmd": "/usr/bin/git clone --origin origin https://gitlab.torproject.org/tpo/onion-services/onionprobe.git /var/lib/onionprobe", "msg": "fatal: destination path '/var/lib/onionprobe' already exists and is not an empty directory.", "rc": 128, "stderr": "fatal: destination path '/var/lib/onionprobe' already exists and is not an empty directory.\n", "stderr_lines": ["fatal: destination path '/var/lib/onionprobe' already exists and is not an empty directory."], "stdout": "", "stdout_lines": []}
+        TASK [onionprobe : installation | repository | Manage the Onionprobe Git repository] ***
+        [WARNING]: Module remote_tmp /var/lib/onionprobe/.ansible/tmp did not
+        exist and was created with a mode of 0700, this may cause issues when
+        running as another user. To avoid this, create the remote_tmp dir with
+        the correct permissions manually
+        fatal: [oniontreva01]: FAILED! => {
+          "changed": false,
+          "cmd": "/usr/bin/git clone --origin origin https://gitlab.torproject.org/tpo/onion-services/onionprobe.git /var/lib/onionprobe",
+          "msg": "fatal: destination path '/var/lib/onionprobe' already exists and is not an empty directory.",
+          "rc": 128,
+          "stderr": "fatal: destination path '/var/lib/onionprobe' already exists and is not an empty directory.\n",
+          "stderr_lines": ["fatal: destination path '/var/lib/onionprobe' already exists and is not an empty directory."],
+          "stdout": "",
+          "stdout_lines": []
+        }
 
 * Miscellaneous fixes.
 
