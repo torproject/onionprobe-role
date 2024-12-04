@@ -51,7 +51,7 @@
         name  : "{{ onionprobe_config_path }}/{{ onionprobe_config }}"
         owner : "{{ owner }}"
         # Ownership and group here could be more restrictive, but then it would be
-        # harder to share this file inside the container for the standalone mode
+        # harder to share this file inside containers for the standalone mode
         #group : "{{ 'debian-tor' if onionprobe_operation == 'standalone' else group }}"
         #mode  : '0640'
         group : "{{ group }}"
@@ -144,5 +144,7 @@
         dest  : "{{ onionprobe_config_path }}/{{ onionprobe_config }}"
         owner : "{{ owner }}"
         group : "{{ group }}"
-        mode  : '0640'
+        # Permissions could be more restrictive, but then it would be harder to
+        # share this file inside containers for the standalone mode
+        mode  : '0644'
       notify: Restart the Onionprobe service

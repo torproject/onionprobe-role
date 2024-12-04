@@ -13,6 +13,8 @@
         manually
         fatal: [oniontreva01]: FAILED! => {"changed": false, "cmd": "/usr/bin/git clone --origin origin https://gitlab.torproject.org/tpo/onion-services/onionprobe.git /var/lib/onionprobe", "msg": "fatal: destination path '/var/lib/onionprobe' already exists and is not an empty directory.", "rc": 128, "stderr": "fatal: destination path '/var/lib/onionprobe' already exists and is not an empty directory.\n", "stderr_lines": ["fatal: destination path '/var/lib/onionprobe' already exists and is not an empty directory."], "stdout": "", "stdout_lines": []}
 
+* Miscellaneous fixes.
+
 ## v0.0.2 - 2024-12-02
 
 * Documentation:
