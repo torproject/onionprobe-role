@@ -5,6 +5,9 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
 
+# Parameters
+SERVICE = onionprobe
+
 # Provisioning
 provision:
 	@./scripts/provision
@@ -22,4 +25,4 @@ test-local:
 	@molecule test -s local
 	@echo Waiting for the service to boostrap before checking it...
 	@sleep 30
-	@sudo service onionprobe status
+	@sudo service $(SERVICE) status

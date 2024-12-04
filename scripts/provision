@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Helper script to setup a development environment
+# Helper script to setup an Ansible development environment
 #
 # Copyright (C) 2024 The Tor Project, Inc.
 # SPDX-License-Identifier: AGPL-3.0-or-later
@@ -9,6 +9,7 @@
 # Parameters
 DIRNAME="`dirname $0`"
 BASEPATH="$DIRNAME/.."
+PROJECT="onionprobe"
 DEPENDENCIES_APT="podman podman-compose python3-pip ansible make"
 DEPENDENCIES_PIP="molecule-plugins[podman] ansible-lint"
 
@@ -27,8 +28,8 @@ $SUDO python3 -m pip install $DEPENDENCIES_PIP --break-system-packages
 
 # Create a symlink so molecule and ansible-lint can find the role
 for scenario in podman local; do
-  if [ ! -e "$BASEPATH/molecule/$scenario/roles/onionprobe" ]; then
+  if [ ! -e "$BASEPATH/molecule/$scenario/roles/$PROJECT" ]; then
     mkdir -p $BASEPATH/molecule/$scenario/roles && \
-      ln -sf ../../.. $BASEPATH/molecule/$scenario/roles/onionprobe
+      ln -sf ../../.. $BASEPATH/molecule/$scenario/roles/$PROJECT
   fi
 done
