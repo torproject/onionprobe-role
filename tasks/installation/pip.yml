@@ -18,7 +18,6 @@
           - python3-pip
           - python3-virtualenv
           - python3-setuptools
-          - python3-packaging
         state: present
 
     - name: installation | pip | Create the virtualenv folder
@@ -29,7 +28,23 @@
         group : "{{ onionprobe_group }}"
         mode  : '0755'
 
-    - name: installation | pip | Install onionprobe package
+    - name: installation | pip | Ensure pip is up-to-date inside the virtualenv
+      ansible.builtin.pip:
+        name       : 'pip' 
+        extra_args : '--upgrade'
+        virtualenv : "{{ onionprobe_virtualenv }}"
+      become     : true
+      become_user: "{{ onionprobe_user }}"
+
+    - name: installation | pip | Install packaging package inside the virtualenv
+      ansible.builtin.pip:
+        name       : 'packaging' 
+        extra_args : '--upgrade'
+        virtualenv : "{{ onionprobe_virtualenv }}"
+      become     : true
+      become_user: "{{ onionprobe_user }}"
+
+    - name: installation | pip | Install onionprobe package inside the virtualenv
       ansible.builtin.pip:
         name       : onionprobe
         extra_args : '--upgrade'
