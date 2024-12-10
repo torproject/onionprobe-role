@@ -30,6 +30,19 @@ platforms:
     # A command that keeps the container running
     command: ${MOLECULE_DOCKER_COMMAND:-"sleep infinity"}
 
+    # The Python Debian container images ships with multiple Python
+    # executables.
+    #
+    # In order to use Python from the Debian package, PATH must be set without
+    # prioritizing /usr/local/bin.
+    #
+    # This may avoid unreliability issues such as
+    # https://gitlab.torproject.org/tpo/onion-services/ansible/onionprobe-role/-/merge_requests/5
+    #
+    # For details, check https://hub.docker.com/_/python
+    env:
+      PATH: /sbin:/usr/sbin:/bin:/usr/bin
+
   - name: single-distro
     # Use a container with Python pre-installed
     image           : docker.io/python:bookworm
@@ -39,6 +52,19 @@ platforms:
     # Container entrypoint
     # A command that keeps the container running
     command: ${MOLECULE_DOCKER_COMMAND:-"sleep infinity"}
+
+    # The Python Debian container images ships with multiple Python
+    # executables.
+    #
+    # In order to use Python from the Debian package, PATH must be set without
+    # prioritizing /usr/local/bin.
+    #
+    # This may avoid unreliability issues such as
+    # https://gitlab.torproject.org/tpo/onion-services/ansible/onionprobe-role/-/merge_requests/5
+    #
+    # For details, check https://hub.docker.com/_/python
+    env:
+      PATH: /sbin:/usr/sbin:/bin:/usr/bin
 
   - name: single-pip
     # Use a container with Python pre-installed
@@ -50,6 +76,19 @@ platforms:
     # A command that keeps the container running
     command: ${MOLECULE_DOCKER_COMMAND:-"sleep infinity"}
 
+    # The Python Debian container images ships with multiple Python
+    # executables.
+    #
+    # In order to use Python from the Debian package, PATH must be set without
+    # prioritizing /usr/local/bin.
+    #
+    # This may avoid unreliability issues such as
+    # https://gitlab.torproject.org/tpo/onion-services/ansible/onionprobe-role/-/merge_requests/5
+    #
+    # For details, check https://hub.docker.com/_/python
+    env:
+      PATH: /sbin:/usr/sbin:/bin:/usr/bin
+
   - name: single-repository
     # Use a container with Python pre-installed
     image           : docker.io/python:bookworm
@@ -60,7 +99,33 @@ platforms:
     # A command that keeps the container running
     command: ${MOLECULE_DOCKER_COMMAND:-"sleep infinity"}
 
-provisioner:
-  name: ansible
-  env:
-    PATH: /sbin:/usr/sbin:/bin:/usr/bin
+    # The Python Debian container images ships with multiple Python
+    # executables.
+    #
+    # In order to use Python from the Debian package, PATH must be set without
+    # prioritizing /usr/local/bin.
+    #
+    # This may avoid unreliability issues such as
+    # https://gitlab.torproject.org/tpo/onion-services/ansible/onionprobe-role/-/merge_requests/5
+    #
+    # For details, check https://hub.docker.com/_/python
+    env:
+      PATH: /sbin:/usr/sbin:/bin:/usr/bin
+
+# The Python Debian container images ships with multiple Python
+# executables.
+#
+# In order to use Python from the Debian package, PATH must be set without
+# prioritizing /usr/local/bin.
+#
+# This may avoid unreliability issues such as
+# https://gitlab.torproject.org/tpo/onion-services/ansible/onionprobe-role/-/merge_requests/5
+#
+# For details, check https://hub.docker.com/_/python
+#
+# This is commented out since setting PATH directly in the container
+# environment is more reliable.
+#provisioner:
+#  name: ansible
+#  env:
+#    PATH: /sbin:/usr/sbin:/bin:/usr/bin
