@@ -40,7 +40,6 @@
         name       : 'pip'
         extra_args : '--upgrade'
         virtualenv : "{{ onionprobe_virtualenv }}"
-        executable : "{{ onionprobe_virtualenv }}/bin/pip"
       become     : true
       become_user: "{{ onionprobe_user }}"
 
