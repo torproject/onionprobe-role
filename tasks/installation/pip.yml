@@ -20,6 +20,14 @@
           - python3-setuptools
         state: present
 
+    - name: installation | pip | Create the virtualenv base folder
+      ansible.builtin.file:
+        name  : "{{ onionprobe_virtualenv | dirname }}"
+        state : directory
+        owner : "{{ onionprobe_user }}"
+        group : "{{ onionprobe_group }}"
+        mode  : '0755'
+
     - name: installation | pip | Create the virtualenv
       ansible.builtin.command:
         cmd    : "virtualenv {{ onionprobe_virtualenv }}"

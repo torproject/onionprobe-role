@@ -85,6 +85,9 @@ onionprobe_project_name: onionprobe
 # Onionprobe virtualenv
 #
 # Sets virtualenv location used by the 'pip' installation method.
+#
+# The parent folder will be owned by {{ onionprobe_user }} and {{
+# onionprobe_group }}, so set this with care.
 onionprobe_virtualenv: "{{ onionprobe_path }}/venv"
 
 # Repository version
