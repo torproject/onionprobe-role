@@ -20,6 +20,19 @@
           - python3-setuptools
         state: present
 
+    # This is sub-optimal, as the parent folder will be owned by
+    # {{ onionprobe_user }} and {{ onionprobe_group }}, so this may lead to
+    # issues.
+    #- name: installation | pip | Create the virtualenv base folder
+    #  ansible.builtin.file:
+    #    name  : "{{ onionprobe_virtualenv | dirname }}"
+    #    state : directory
+    #    owner : "{{ onionprobe_user }}"
+    #    group : "{{ onionprobe_group }}"
+    #    mode  : '0755'
+
+    # Basic virtualenv creation: just make the folder, and let
+    # ansible.builtin.pip do the rest
     - name: installation | pip | Create the virtualenv folder
       ansible.builtin.file:
         name  : "{{ onionprobe_virtualenv }}"
@@ -28,7 +41,24 @@
         group : "{{ onionprobe_group }}"
         mode  : '0755'
 
-    - name: installation | pip | Install onionprobe package
+    # Complete virtualenv creation: setup the environment by explicitly invoking virtualenv.
+    #- name: installation | pip | Create the virtualenv
+    #  ansible.builtin.command:
+    #    cmd    : "virtualenv {{ onionprobe_virtualenv }}"
+    #    creates: "{{ onionprobe_virtualenv }}"
+    #  become     : true
+    #  become_user: "{{ onionprobe_user }}"
+
+    # This might be neeed in some situations where a recent pip is needed.
+    #- name: installation | pip | Ensure pip is up-to-date inside the virtualenv
+    #  ansible.builtin.pip:
+    #    name       : 'pip'
+    #    extra_args : '--upgrade'
+    #    virtualenv : "{{ onionprobe_virtualenv }}"
+    #  become     : true
+    #  become_user: "{{ onionprobe_user }}"
+
+    - name: installation | pip | Install onionprobe package inside the virtualenv
       ansible.builtin.pip:
         name       : onionprobe
         extra_args : '--upgrade'
