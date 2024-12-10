@@ -1,5 +1,12 @@
 # Onionprobe Ansible Role ChangeLog
 
+## v0.0.4 - 2024-12-10
+
+* Fix CI issue with recent `python:bookworm` container images
+  ([tpo/onion-services/ansible/onionprobe-role!5][]).
+
+[tpo/onion-services/ansible/onionprobe-role!5]: https://gitlab.torproject.org/tpo/onion-services/ansible/onionprobe-role/-/merge_requests/5
+
 ## v0.0.3 - 2024-12-04
 
 * Adds `onionprobe_home` variable, defaulting to `/home/onionprobe`.
