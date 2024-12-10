@@ -22,7 +22,7 @@ driver:
 platforms:
   - name: standalone
     # Use a container with Python pre-installed
-    image           : docker.io/python:bookworm
+    image           : docker.io/debian:bookworm
     pre_build_image : true
     privileged      : true
 
@@ -32,7 +32,7 @@ platforms:
 
   - name: single-distro
     # Use a container with Python pre-installed
-    image           : docker.io/python:bookworm
+    image           : docker.io/debian:bookworm
     pre_build_image : true
     privileged      : true
 
@@ -42,7 +42,7 @@ platforms:
 
   - name: single-pip
     # Use a container with Python pre-installed
-    image           : docker.io/python:bookworm
+    image           : docker.io/debian:bookworm
     pre_build_image : true
     privileged      : true
 
@@ -52,7 +52,7 @@ platforms:
 
   - name: single-repository
     # Use a container with Python pre-installed
-    image           : docker.io/python:bookworm
+    image           : docker.io/debian:bookworm
     pre_build_image : true
     privileged      : true
 

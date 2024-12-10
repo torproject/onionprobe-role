@@ -23,23 +23,23 @@
         name: systemd
 
     # Install ansible.builtin.pip dependencies from distro packages
-    #- name: deps | Install ansible.builtin.pip dependencies
-    #  ansible.builtin.apt:
-    #    name:
-    #      - python3-setuptools
-    #      - python3-pip
-    #      - python3-virtualenv
-    #  when: ansible_os_family == 'Debian'
+    - name: deps | Install ansible.builtin.pip dependencies
+      ansible.builtin.apt:
+        name:
+          - python3-setuptools
+          - python3-pip
+          - python3-virtualenv
+      when: ansible_os_family == 'Debian'
 
     # Install ansible.builtin.pip dependencies from pip
-    - name: deps | Install ansible.builtin.pip dependencies
-      ansible.builtin.pip:
-        name:
-          - 'pip'
-          - 'packaging'
-          - 'virtualenv'
-          - 'setuptools'
-        extra_args: '--break-system-packages --upgrade'
+    #- name: deps | Install ansible.builtin.pip dependencies
+    #  ansible.builtin.pip:
+    #    name:
+    #      - 'pip'
+    #      - 'packaging'
+    #      - 'virtualenv'
+    #      - 'setuptools'
+    #    extra_args: '--break-system-packages --upgrade'
 
 - name: deps | Create the needed groups
   block:
