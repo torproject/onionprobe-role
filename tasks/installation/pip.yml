@@ -20,19 +20,10 @@
           - python3-setuptools
         state: present
 
-    - name: installation | pip | Create the virtualenv folder
-      ansible.builtin.file:
-        name  : "{{ onionprobe_virtualenv }}"
-        state : directory
-        owner : "{{ onionprobe_user }}"
-        group : "{{ onionprobe_group }}"
-        mode  : '0755'
-
-    - name: installation | pip | Install packaging package inside the virtualenv
-      ansible.builtin.pip:
-        name       : 'packaging'
-        extra_args : '--upgrade'
-        virtualenv : "{{ onionprobe_virtualenv }}"
+    - name: installation | pip | Create the virtualenv
+      ansible.builtin.command:
+        cmd    : "virtualenv {{ onionprobe_virtualenv }}"
+        creates: "{{ onionprobe_virtualenv }}"
       become     : true
       become_user: "{{ onionprobe_user }}"
 
