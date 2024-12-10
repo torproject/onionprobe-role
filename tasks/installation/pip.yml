@@ -35,9 +35,9 @@
       become     : true
       become_user: "{{ onionprobe_user }}"
 
-    - name: installation | pip | Install packaging package inside the virtualenv
+    - name: installation | pip | Ensure pip is up-to-date inside the virtualenv
       ansible.builtin.pip:
-        name       : 'packaging'
+        name       : 'pip'
         extra_args : '--upgrade'
         virtualenv : "{{ onionprobe_virtualenv }}"
         executable : "{{ onionprobe_virtualenv }}/bin/pip"
@@ -49,7 +49,6 @@
         name       : onionprobe
         extra_args : '--upgrade'
         virtualenv : "{{ onionprobe_virtualenv }}"
-        executable : "{{ onionprobe_virtualenv }}/bin/pip"
       become     : true
       become_user: "{{ onionprobe_user }}"
 
