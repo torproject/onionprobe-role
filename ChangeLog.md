@@ -1,5 +1,9 @@
 # Onionprobe Ansible Role ChangeLog
 
+## v0.0.5 - 2024-12-17
+
+* Fix `onionprobe_config_script_path` handling.
+
 ## v0.0.4 - 2024-12-10
 
 * Fix CI issue with recent `python:bookworm` container images

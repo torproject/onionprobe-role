@@ -190,9 +190,10 @@ onionprobe_config_src: ''
 #
 # Examples:
 #
-#   onionprobe_config_path: '/usr/share/onionprobe/examples'
-#   onionprobe_config_path: '{{ onionprobe_path }}/packages'
-#   onionprobe_config_path: '{{ onionprobe_virtualenv }}/share/onionprobe/examples
+#   onionprobe_config_script_path: '/usr/share/onionprobe/examples'
+#   onionprobe_config_script_path: '{{ onionprobe_path }}/packages'
+#   onionprobe_config_script_path: '{{ onionprobe_path }}/contrib/configs'
+#   onionprobe_config_script_path: '{{ onionprobe_virtualenv }}/share/onionprobe/examples
 #
 onionprobe_config_script_path: ''
 
