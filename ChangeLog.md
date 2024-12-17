@@ -1,5 +1,10 @@
 # Onionprobe Ansible Role ChangeLog
 
+## v0.0.6 - 2024-12-17
+
+* Standalone mode: automatically add `--output_folder` into `CONFIGURATOR_PARAMS`, in
+  sync with `{{ onionprobe_config_path }}`.
+
 ## v0.0.5 - 2024-12-17
 
 * Fix `onionprobe_config_script_path` handling.

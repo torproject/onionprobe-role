@@ -235,11 +235,12 @@ onionprobe_container_runtime: 'docker'
 # that whenever it restarts a fresh configuration is picked.
 #
 # The --output-folder option don't need to be set, as Ansible will automatically
-# configure it in sync with {{ onionprobe_path }}.
+# configure it in sync with {{ onionprobe_config_path }}.
 #
 # When using options such as --config_template in the standalone mode, note
-# that the Onionprobe path inside the container will be different from {{
-# onionprobe_path }} (usually it will be /srv/shared).
+# that the Onionprobe path inside the container will be different from
+# {{ onionprobe_path }}. Usually, the Onionprobe path inside the container will be
+# /srv/shared.
 onionprobe_config_script_params: ''
 
 # Prometheus options as documented at
