@@ -234,6 +234,8 @@ onionprobe_container_runtime: 'docker'
 # For the standalone operation mode, it's recommended to set "--wait" and
 # "rounds=" params, so the configuration container stops periodically, ensuring
 # that whenever it restarts a fresh configuration is picked.
+#
+# Setting --output-folder and --config_template is also recommended.
 onionprobe_config_script_params: ''
 
 # Prometheus options as documented at
