@@ -225,7 +225,6 @@ onionprobe_container_runtime: 'docker'
 #
 #   onionprobe_config_script_params: >
 #     --loop --wait 3600
-#     --output_folder /srv/onionprobe/contrib/configs
 #     --config_template /srv/onionprobe/configs/tor.yaml
 #     --config_overrides rounds=20 descriptor_max_retries=20
 #     descriptor_timeout=120 http_connect_timeout=120
@@ -235,10 +234,12 @@ onionprobe_container_runtime: 'docker'
 # "rounds=" params, so the configuration container stops periodically, ensuring
 # that whenever it restarts a fresh configuration is picked.
 #
-# Setting --output-folder and --config_template is also recommended.
-# Note that, for the standalone mode, the Onionprobe path inside the
-# container will be different from {{ onionprobe_path }} (usually
-# it will be /srv/shared).
+# The --output-folder option don't need to be set, as Ansible will automatically
+# configure it in sync with {{ onionprobe_path }}.
+#
+# When using options such as --config_template in the standalone mode, note
+# that the Onionprobe path inside the container will be different from {{
+# onionprobe_path }} (usually it will be /srv/shared).
 onionprobe_config_script_params: ''
 
 # Prometheus options as documented at
