@@ -1,6 +1,6 @@
 ---
 #
-# Ansible Lint configuration the Onionprobe Ansible role
+# Ansible Lint configuration
 #
 # For a detailed explanation of supported values, check the documentation at
 # https://ansible.readthedocs.io/projects/lint/configuring/
