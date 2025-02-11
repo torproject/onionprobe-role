@@ -14,3 +14,9 @@ include:
   - project: tpo/onion-services/ansible/ancible
     file:
       - .gitlab-ci-base.yml
+
+lint:
+  extends: .ancible_lint
+
+molecule_podman:
+  extends: .ancible_molecule_podman
