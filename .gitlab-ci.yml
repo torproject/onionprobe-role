@@ -1,65 +1,16 @@
 ---
 #
-# GitLab CI for the Onionprobe Ansible role
+# GitLab CI for Ansible roles
 #
 # Copyright (C) 2024 The Tor Project, Inc.
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
 
-# Linting
-lint:
-  stage: test
+# Variables
+variables:
+  ROLE: onionprobe
 
-  image: debian:bookworm
-
-  before_script:
-    - apt-get update
-    - apt install -y python3-pip ansible
-    - python3 -m pip install ansible-lint --break-system-packages
-    - ansible --version
-    - ansible-lint --version
-    - mkdir -p molecule/podman/roles && ln -s ../../.. molecule/podman/roles/onionprobe
-    - mkdir -p molecule/local/roles  && ln -s ../../.. molecule/local/roles/onionprobe
-
-  script:
-    - ansible-lint
-
-# Podman CI workflow
-molecule_podman:
-  stage: test
-
-  image:
-    name: containers.torproject.org/tpo/tpa/base-images/podman:bookworm
-    docker:
-      user: root
-
-  before_script:
-    - apt-get update
-    - apt install -y sudo python3-pip ansible
-    - python3 -m pip install molecule-plugins[podman] --break-system-packages
-    - sudo -u podman python3 --version
-    - sudo -u podman ansible --version
-    - sudo -u podman molecule --version
-    - sudo -u podman podman info
-    - sudo -u podman mkdir -p molecule/podman/roles && sudo -u podman ln -s ../../.. molecule/podman/roles/onionprobe
-
-  script:
-    - sudo -u podman molecule test -s podman
-
-# Run Ansible tests directly in the CI containers
-#molecule_local:
-#  stage: test
-#
-#  image: debian:bookworm
-#
-#  before_script:
-#    - apt-get update
-#    - apt install -y python3-pip ansible
-#    - python3 -m pip install molecule --break-system-packages
-#    - python3 --version
-#    - ansible --version
-#    - molecule --version
-#    - mkdir -p molecule/podman/roles && ln -s ../../.. molecule/podman/roles/onionprobe
-#
-#  script:
-#    - molecule test -s local
+include:
+  - project: tpo/onion-services/ansible/ancible
+    file:
+      - .gitlab-ci-base.yml

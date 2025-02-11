@@ -30,6 +30,18 @@ platforms:
     # A command that keeps the container running
     command: ${MOLECULE_DOCKER_COMMAND:-"sleep infinity"}
 
+    extra_opts:
+      # May fix "Error: crun: sethostname: Operation not permitted: OCI permission denied"
+      # https://github.com/containers/podman/issues/14284#issuecomment-1130113553
+      #- --group-add=keep-groups
+
+      # May fix "sethostname: Operation not permitted: OCI permission denied"
+      # Details at https://github.com/containers/podman/discussions/25061
+      #- --cap-add=SYS_ADMIN
+
+      # Debug output
+      - --log-level=debug
+
     # The Python Debian container images ships with multiple Python
     # executables.
     #
