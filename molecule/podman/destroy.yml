@@ -1,4 +1,11 @@
 ---
+#
+# Onionprobe Ansible role - instance removal playbook
+#
+# Copyright (C) 2024 The Tor Project, Inc.
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+
 - name: Destroy molecule containers
   hosts: all
   gather_facts: false
