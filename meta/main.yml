@@ -4,7 +4,7 @@ dependencies: []
 galaxy_info:
   role_name: onionprobe
   author: torproject
-  description: Onionsprobe Ansible Role
+  description: Onionprobe Ansible Role
   company: "The Tor Project, Inc."
   license: "GPLv3"
   min_ansible_version: "2.8"
