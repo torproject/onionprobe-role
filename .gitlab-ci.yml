@@ -20,3 +20,15 @@ lint:
 
 molecule_podman:
   extends: .ancible_molecule_podman
+
+release:
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  stage: .post
+  rules:
+    # Run this job when a tag is created
+    - if: $CI_COMMIT_TAG
+  script:
+    - echo "Running release_job..."
+  release:
+    tag_name: '$CI_COMMIT_TAG'
+    description: '$CI_COMMIT_TAG'
