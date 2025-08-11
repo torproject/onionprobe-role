@@ -115,4 +115,9 @@ This role has [molecule tests](molecule):
 * The `local` scenario actually applies the configuration into the running
   node, so be careful were to run it.
 
-A [Makefile](Makefile) exists to help local testing.
+A [Makefile](Makefile) exists to help local testing, which relies on
+[AnCIble][] to be available somewhere. Details in how to use it are given
+[here][].
+
+[AnCIble]: https://gitlab.torproject.org/tpo/onion-services/ansible/ancible/
+[here]: https://gitlab.torproject.org/tpo/onion-services/ansible/ancible/-/blob/main/README.md#development
