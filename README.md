@@ -1,6 +1,7 @@
 # Ansible role for Onionprobe
 
-This [Ansible][] role manages [Onionprobe][].
+This [Ansible][] role manages [Onionprobe][], a monitoring tool for [Tor Onion
+Services][].
 
 It can install [Onionprobe][] from it's [Git][] repository, [from PyPI][]
 or using a distribution-provided package (if available).
@@ -10,6 +11,7 @@ It can configure [Onionprobe][] to run as a single service or in the
 
 [Ansible]: https://ansible.com
 [Onionprobe]: https://gitlab.torproject.org/tpo/onion-services/onionprobe
+[Tor Onion Services]: https://community.torproject.org/onion-services/
 [Git]: https://git-scm.com
 [from PyPI]: https://pypi.org/project/onionprobe/
 
