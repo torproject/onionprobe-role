@@ -65,10 +65,10 @@
         umask   : '022'
       # Setting a temporary folder outside the user folder ensures the git clone can work
       # in special situations like when Ansible is running as root and creates a temporary
-      # folder in {{ onionspray_path }} before doing a clone.
+      # folder in {{ onionsprobe_path }} before doing a clone.
       #
       # This is currently commented out since {{ onionprobe_home }} defaults to a value
-      # different than {{ onionspray_path }}. Check ChangeLog entry for v0.0.3 for
+      # different than {{ onionsprobe_path }}. Check ChangeLog entry for v0.0.3 for
       # additional details.
       #environment:
       #  ANSIBLE_REMOTE_TMP: "/tmp/{{ onionspray_user }}/ansible"
