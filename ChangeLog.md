@@ -1,5 +1,11 @@
 # Onionprobe Ansible Role ChangeLog
 
+## v0.0.7 - Unreleased
+
+* Upgraded CI to Debian trixie ([tpo/onion-services/ansible/onionprobe-role!6][]).
+
+[tpo/onion-services/ansible/onionprobe-role!6]: https://gitlab.torproject.org/tpo/onion-services/ansible/onionprobe-role/-/merge_requests/6
+
 ## v0.0.6 - 2024-12-17
 
 * Standalone mode: automatically add `--output_folder` into `CONFIGURATOR_PARAMS`, in
