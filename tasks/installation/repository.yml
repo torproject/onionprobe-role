@@ -59,6 +59,7 @@
         repo    : "{{ onionprobe_repo }}"
         dest    : "{{ onionprobe_path }}"
         version : "{{ onionprobe_repository_version }}"
+        force   : true
         # We're setting the following umask so containers can also access the repository,
         # given that they may run under different users; a more restrictive setting could
         # be possible, but then containers would probably not access the needed files.
