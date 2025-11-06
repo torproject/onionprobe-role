@@ -53,14 +53,14 @@ Merge requests are welcome to cover more Operating Systems.
 
 ## Installation
 
-This role can be installed directly through [Ansible Galaxy][]:
+This role can be installed directly [through Ansible Galaxy][]:
 
     ansible-galaxy role install torproject.onionprobe
 
 It's also possible to clone it directly from the [upstream repository][].
 A [GitHub mirror][] is also provided.
 
-[Ansible Galaxy]: https://galaxy.ansible.com
+[through Ansible Galaxy]: https://galaxy.ansible.com/ui/standalone/roles/torproject/onionprobe
 [upstream repository]: https://gitlab.torproject.org/tpo/onion-services/ansible/onionprobe-role
 [GitHub mirror]: https://github.com/torproject/onionprobe-role/
 
