@@ -43,7 +43,7 @@ Merge requests are welcome to cover more Operating Systems.
     [experimental][podman-experimental].
 
 [Systemd]: https://systemd.io
-[ansible.builin.pip]: https://docs.ansible.com/ansible/latest/collections/ansible/builtin/pip_module.html
+[ansible.builtin.pip]: https://docs.ansible.com/ansible/latest/collections/ansible/builtin/pip_module.html
 [standalone]: https://onionservices.torproject.org/apps/web/onionprobe/standalone/
 [Docker]: https://docker.com
 [Podman]: https://podman.io
